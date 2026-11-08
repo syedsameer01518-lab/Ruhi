@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RUHI</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#008069">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RUHI">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{--hd:#008069;--bg:#efeae2;--in:#fff;--out:#d9fdd3;--tx:#111b21;--mut:#667781;--pill:#fff3c5;--pt:#54656f;--card:#fff;--bd:#e9edef;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hd:#202c33;--bg:#0b141a;--in:#202c33;--out:#005c4b;--tx:#e9edef;--mut:#8696a0;--pill:#182229;--pt:#8696a0;--card:#111b21;--bd:#222d34;color-scheme:dark}}
+:root[data-theme="dark"]{--hd:#202c33;--bg:#0b141a;--in:#202c33;--out:#005c4b;--tx:#e9edef;--mut:#8696a0;--pill:#182229;--pt:#8696a0;--card:#111b21;--bd:#222d34;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--hd);color:#fff;display:flex;align-items:center;gap:8px;padding:10px 12px}
+header h1{font-size:18px;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header button{background:none;border:0;color:#fff;font-size:20px;cursor:pointer;padding:4px 8px}
+.main{max-width:760px;margin:0 auto}
+.it{display:flex;gap:12px;padding:12px 14px;background:var(--card);border-bottom:1px solid var(--bd);cursor:pointer;align-items:center}
+.av{border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;font-weight:700;flex:none;background-position:center}
+.it .t{flex:1;min-width:0}.it b{display:block}.it small{color:var(--mut);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it .x{background:none;border:0;color:var(--mut);font-size:22px;padding:8px;cursor:pointer}
+.empty{padding:40px 20px;text-align:center;color:var(--mut)}
+.btn{background:#25d366;color:#fff;border:0;border-radius:24px;padding:12px 22px;font:inherit;font-weight:600;cursor:pointer}
+.btn.sm{padding:8px 14px;font-size:14px}.btn.g{background:var(--pill);color:var(--pt)}.btn.red{background:#d93025}
+.fab{width:58px;height:58px;padding:0;font-size:32px;line-height:1;position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 4px 14px rgba(0,0,0,.3)}
+#msgs{padding:10px 8px 30px}
+.day{text-align:center;margin:12px 0}.day span,.sys span{background:var(--pill);color:var(--pt);font-size:12.5px;padding:4px 10px;border-radius:8px}
+.sys{text-align:center;margin:6px 20px}
+.row{display:flex;margin:2px 0;padding:1px 0}.row.o{justify-content:flex-end}.row.s{background:rgba(37,211,102,.28)}
+.b{max-width:82%;padding:6px 8px 4px;border-radius:9px;background:var(--in);box-shadow:0 1px 1px rgba(0,0,0,.13);word-break:break-word;white-space:pre-wrap;min-width:64px;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.o .b{background:var(--out)}.nm{font-size:12.8px;font-weight:600;display:block}
+.tm{float:right;margin:6px 0 0 10px;font-size:11px;color:var(--mut)}.star{display:block;font-size:11px;color:#c79100;font-weight:600}
+.b img,.b video{max-width:100%;max-height:320px;border-radius:7px;display:block;margin-bottom:3px}.b audio{width:230px;max-width:100%}
+.file{display:inline-block;background:rgba(0,0,0,.08);padding:8px 10px;border-radius:8px;font-size:13px;margin-bottom:3px;cursor:pointer}
+a{color:#53bdeb}
+#bar{display:none;background:var(--hd);padding:0 12px 10px}#bar input{width:100%;padding:9px 12px;border-radius:20px;border:0;font:inherit}
+#dock{position:sticky;bottom:0;z-index:8;display:none;background:var(--bg);padding-bottom:env(safe-area-inset-bottom,0px)}
+#cmp{display:flex;gap:6px;padding:8px;align-items:center}#cmp input{flex:1;padding:11px 14px;border-radius:22px;border:0;background:var(--in);color:var(--tx);font:inherit}
+#cmp button{border:0;background:none;font-size:24px;cursor:pointer}#snd{background:#25d366!important;color:#fff;border-radius:50%;width:42px;height:42px;font-size:18px!important}
+#emo{display:none;grid-template-columns:repeat(8,1fr);max-height:190px;overflow:auto;background:var(--card);padding:6px}#emo button{border:0;background:none;font-size:26px;padding:6px;cursor:pointer}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.sheet.open{display:flex}.panel{background:var(--card);border-radius:14px;padding:18px;width:100%;max-width:380px;max-height:80%;overflow:auto}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:11px;border-radius:10px;border:1px solid var(--bd);background:none;color:var(--tx);font:inherit;cursor:pointer}.opt.red{background:#d93025;color:#fff;border:0}
+.more{text-align:center;margin:8px}.more button{background:var(--pill);color:var(--pt);border:0;border-radius:14px;padding:6px 14px;cursor:pointer}
+.pf{text-align:center;padding:18px 12px 8px;background:var(--card)}.pf .av{margin:0 auto 8px}.pf h2{margin:4px 0}.pf small{color:var(--mut)}
+.r2{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.sec{padding:10px 14px;background:var(--card);margin-top:8px;border-bottom:1px solid var(--bd)}.sec h4{margin:0 0 6px;color:var(--mut);font-size:13px}.sec label{display:flex;gap:8px;align-items:center;padding:5px 0}
+.tabs{display:flex;overflow-x:auto;background:var(--card);margin-top:8px;border-bottom:1px solid var(--bd)}.tabs button{flex:none;border:0;background:none;color:var(--mut);padding:12px 14px;font:inherit;border-bottom:3px solid transparent;cursor:pointer}.tabs button.on{color:#25d366;border-color:#25d366;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--card)}.grid .mv{aspect-ratio:1;overflow:hidden}.grid img,.grid video{width:100%!important;height:100%;max-height:none!important;object-fit:cover;border-radius:0;margin:0;min-height:0!important}
+.li{display:flex;gap:10px;padding:11px 14px;background:var(--card);border-bottom:1px solid var(--bd);cursor:pointer;align-items:center}.li div{flex:1;min-width:0;word-break:break-word}.li small{color:var(--mut);display:block}
+.mv{position:relative;display:block;cursor:pointer}.mv video{width:240px;max-width:100%;min-height:120px;background:#000}.mv img{min-width:140px;min-height:90px}
+.mv.video::after{content:"▶";position:absolute;inset:0;margin:auto;width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;font-size:22px;pointer-events:none}
+.bar{height:6px;background:var(--bd);border-radius:3px;margin-top:4px;overflow:hidden}.bar i{display:block;height:100%;background:#25d366}
+#viewer{position:fixed;inset:0;background:#000;z-index:30;display:none;flex-direction:column}#viewer.open{display:flex}
+#vtop{display:flex;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;color:#fff}#vclose{background:none;border:0;color:#fff;font-size:24px;cursor:pointer}
+#vbody{flex:1;display:flex;align-items:center;justify-content:center;overflow:auto;min-height:0}#vbody img,#vbody video{max-width:100%;max-height:100%;object-fit:contain}#vbody img.z{max-width:none;max-height:none;width:200%}
+#vbody.doc{display:block;padding:8px;text-align:center;color:#fff}#vbody.doc canvas{max-width:100%;height:auto;background:#fff;margin:0 auto 8px;display:block}#vbody.doc pre{text-align:left;white-space:pre-wrap;word-break:break-word;font:14px/1.4 ui-monospace,monospace}#viewer.d .vnav{display:none}
+.vnav{position:absolute;top:50%;background:rgba(255,255,255,.18);border:0;color:#fff;font-size:28px;width:40px;height:56px;border-radius:8px;cursor:pointer}#vprev{left:6px}#vnext{right:6px}
+#lock{position:fixed;inset:0;background:#008069;z-index:40;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff}#lock.on{display:flex}
+#dots{display:flex;gap:14px;margin:18px 0 26px}#dots i{width:14px;height:14px;border-radius:50%;border:2px solid #fff}#dots i.f{background:#fff}
+#pad{display:grid;grid-template-columns:repeat(3,72px);gap:14px}#pad button{height:72px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:26px;cursor:pointer}
+.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-12px)}75%{transform:translateX(12px)}}
+#splash{position:fixed;inset:0;background:#008069;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .5s}
+.word{display:flex;font-size:60px;font-weight:800}
+.word span{display:inline-block;color:#ffc2dd;opacity:0;animation:spl 1s cubic-bezier(.2,.9,.3,1.2) forwards,spread .6s 1.4s ease-in-out forwards}
+.word span:nth-child(1){--x:-140px;animation-delay:.1s,1.4s}.word span:nth-child(2){--x:-50px;color:#b9f6ca;animation-delay:.25s,1.4s}
+.word span:nth-child(3){--x:50px;animation-delay:.4s,1.4s}.word span:nth-child(4){--x:140px;color:#b9f6ca;animation-delay:.55s,1.4s}.word span:nth-child(5){--x:200px;animation-delay:.7s,1.4s}
+@keyframes spl{from{opacity:0;transform:translate(var(--x),-70px) scale(.2) rotate(-40deg);filter:blur(12px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes spread{to{margin:0 5px}}#splash .tag{margin-top:12px;font-size:17px;color:#ffe3ef;opacity:0;animation:fade .6s 1.5s forwards}
+#splash .pb{width:170px;height:4px;background:rgba(255,255,255,.3);border-radius:2px;margin-top:26px;overflow:hidden}#splash .pb i{display:block;height:100%;background:#fff;animation:fill 2s ease-in-out forwards}@keyframes fill{from{width:0}to{width:100%}}
+#splash .ok{margin-top:18px;opacity:0;animation:fade .5s 1.7s forwards}@keyframes fade{to{opacity:1}}
+</style>
+</head>
+<body>
+<div id="splash"><div class="word"><span>R</span><span>U</span><span>H</span><span>I</span><span>🫰</span></div><div class="tag">Your personal backup</div><div class="pb"><i></i></div><div class="ok" id="spt">✓ Backed up</div></div>
+<div id="lock"><div style="font-size:30px;font-weight:800"><span style="color:#ffc2dd">RU</span><span style="color:#b9f6ca">HI</span> 🫰</div><div style="opacity:.85;margin-top:6px">Enter your PIN</div><div id="dots"></div><div id="pad"></div></div>
+<header id="hd"></header>
+<div id="bar"><input id="q" type="search" placeholder="Search in this chat"></div>
+<div class="main" id="main"></div>
+<div id="dock"><div id="emo"></div><div id="cmp"><button id="emb" aria-label="Emoji">😊</button><input id="ti" placeholder="Message" autocomplete="off"><button id="snd" aria-label="Send">➤</button></div></div>
+<button class="btn fab" id="fab" aria-label="Add">+</button>
+<input id="file" type="file" multiple accept=".txt,.zip,image/*,video/*,audio/*,application/pdf" hidden>
+<input id="pfile" type="file" accept="image/*" hidden>
+<div class="sheet" id="sheet"><div class="panel" id="panel"></div></div>
+<div id="viewer"><div id="vtop"><button id="vclose" aria-label="Close">✕</button><span id="vcap"></span></div><div id="vbody"></div><button class="vnav" id="vprev">‹</button><button class="vnav" id="vnext">›</button></div>
+
+<script>
+const $=s=>document.querySelector(s);
+let chats=[],cur=null,view=[],limit=400,urls={},sel=new Set(),lp=false,lt=0,mode="list",ptab="media",meSet=new Set(),vi=[],vx=0,tx0=0,buf="";
+const LK="ruhi:pin",DF={};
+/* storage */
+const DB=()=>new Promise((res,rej)=>{const r=indexedDB.open("chatvault",1);r.onupgradeneeded=()=>{r.result.createObjectStore("chats",{keyPath:"id"});r.result.createObjectStore("media")};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+async function op(store,mode,fn){const db=await DB();return new Promise((res,rej)=>{const t=db.transaction(store,mode);const rq=fn(t.objectStore(store));t.oncomplete=()=>res(rq&&rq.result);t.onerror=()=>rej(t.error)})}
+async function load(){try{chats=(await op("chats","readonly",s=>s.getAll())).sort((a,b)=>b.added-a.added)}catch(e){chats=[]}}
+const save=c=>op("chats","readwrite",s=>s.put(c));
+const MIME={jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",gif:"image/gif",webp:"image/webp",mp4:"video/mp4",mov:"video/quicktime","3gp":"video/3gpp",webm:"video/webm",opus:"audio/ogg; codecs=opus",ogg:"audio/ogg",mp3:"audio/mpeg",m4a:"audio/mp4",aac:"audio/aac",wav:"audio/wav"};
+async function mUrl(k){if(!urls[k]){const b=await op("media","readonly",s=>s.get(k));if(b){const x=(k.split(".").pop()||"").toLowerCase();urls[k]=URL.createObjectURL(MIME[x]?new Blob([b],{type:MIME[x]}):b)}}return urls[k]}
+/* dialogs */
+function dlg(msg,btns){return new Promise(r=>{const p=$("#panel");p.innerHTML=`<p style="margin:0 0 14px;word-break:break-word">${esc(msg)}</p><div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"></div>`;const row=p.lastChild;btns.forEach(([l,fn,cls])=>{const b=document.createElement("button");b.className="opt "+(cls||"");b.style.cssText="display:inline-block;width:auto";b.textContent=l;b.onclick=()=>{$("#sheet").classList.remove("open");if(fn)fn();r(l)};row.appendChild(b)});$("#sheet").classList.add("open")})}
+const ask=(msg,ok)=>dlg(msg,ok?[["Cancel"],[ok,null,"red"]]:[["OK"]]).then(l=>l===ok);
+function inp(title,val,num){return new Promise(r=>{const p=$("#panel");p.innerHTML=`<h3 style="margin:0 0 8px">${esc(title)}</h3><input id="pin1" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit"><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="opt" style="display:inline-block;width:auto" id="c1">Cancel</button><button class="opt" style="display:inline-block;width:auto;background:#25d366;color:#fff;border:0" id="o1">Save</button></div>`;const i=$("#pin1");i.value=val||"";if(num){i.type="password";i.inputMode="numeric"}$("#sheet").classList.add("open");i.focus();$("#c1").onclick=()=>{$("#sheet").classList.remove("open");r(null)};$("#o1").onclick=()=>{$("#sheet").classList.remove("open");r(i.value.trim())}})}
+function openLink(u){dlg(u,[["Close"],["Copy",()=>{try{navigator.clipboard.writeText(u)}catch(e){}}],["Open",()=>{const w=window.open(u,"_blank");if(w)w.opener=null;else dlg("The link couldn’t open here. Use Copy and paste it in your browser.",[["OK"]])},"red"]])}
+/* parsing */
+const RE=/^\[?(\d{1,4}[\/.\-]\d{1,2}[\/.\-]\d{1,4}),?\s+(\d{1,2}[:.]\d{2}(?::\d{2})?(?:\s?[AaPp]\.?[Mm]\.?)?)\]?\s*(?:[-–]\s*)?([\s\S]*)$/;
+function parse(text){const out=[];for(const raw of text.split(/\r?\n/)){const line=raw.replace(/[\u200e\u200f\u202a-\u202e]/g,"");const m=line.match(RE);
+ if(m){const rest=m[3];let s="",b=rest;const i=rest.indexOf(": ");if(i>0&&i<60){s=rest.slice(0,i);b=rest.slice(i+2)}out.push({d:m[1],t:m[2].replace(/\s+/g," "),s,b})}else if(out.length)out[out.length-1].b+="\n"+line}return out}
+function fileOf(b){let m=b.match(/<attached:\s*(.+?)>/);if(m)return m[1].trim();m=b.match(/^(.+?\.\w{2,5})\s\(file attached\)/);return m?m[1].trim():""}
+function dayFirst(c){if(DF[c.id]!==undefined)return DF[c.id];let r=true;for(const m of c.msgs){const p=m.d.split(/[\/.\-]/).map(Number);if(p[0]>12){r=true;break}if(p[1]>12){r=false;break}}return DF[c.id]=r}
+function ts(c,m){if(m.ts)return m.ts;const p=m.d.split(/[\/.\-]/).map(Number),df=dayFirst(c);const t=m.t.match(/(\d{1,2})[:.](\d{2})(?::(\d{2}))?\s?([AaPp])?/)||[];let h=+t[1]||0;if(/p/i.test(t[4]||"")&&h<12)h+=12;if(/a/i.test(t[4]||"")&&h===12)h=0;const y=p[2]<100?2000+p[2]:p[2];return new Date(y,(df?p[1]:p[0])-1,df?p[0]:p[1],h,+t[2]||0,+t[3]||0).getTime()||0}
+function buildView(){const ids=cur.kind==="combo"?[...cur.src,cur.id]:[cur.id],v=[];meSet=new Set();ids.forEach(id=>{const c=chats.find(x=>x.id===id);if(!c)return;if(c.me)meSet.add(c.me);c.msgs.forEach((m,i)=>v.push({m,c:id,i,t:ts(c,m)}))});if(ids.length>1)v.sort((a,b)=>a.t-b.t||a.i-b.i);return v}
+/* import / backup */
+async function importFiles(files){
+ let text="",name="",media={};
+ for(const f of files){const n=f.name;
+  if(/\.zip$/i.test(n)){const z=await JSZip.loadAsync(f);if(z.file("chats.json")){await restore(z);return}name=name||n;
+   for(const k of Object.keys(z.files)){const e=z.files[k];if(e.dir)continue;const base=k.split("/").pop();
+    if(/\.txt$/i.test(base)&&!text){text=await e.async("string");name=base}else if(!/\.txt$/i.test(base))media[base]=await e.async("blob")}}
+  else if(/\.txt$/i.test(n)){text=await f.text();name=n}else media[n]=f}
+ if(!text){ask("Please choose the exported chat .txt file or the .zip.");return}
+ const msgs=parse(text);if(!msgs.length){ask("Couldn’t read messages from that file.");return}
+ const senders=[...new Set(msgs.map(m=>m.s).filter(Boolean))],id=Date.now().toString(36);
+ const title=name.replace(/\.(txt|zip)$/i,"").replace(/^WhatsApp Chat( with| -)?\s*/i,"")||"Chat";
+ const chat={id,title,msgs,senders,me:senders.length==2?"":senders[0]||"",added:Date.now()};
+ await save(chat);for(const k of Object.keys(media))await op("media","readwrite",s=>s.put(media[k],id+"/"+k));
+ await load();askMe(chat)}
+async function restore(z){const cs=JSON.parse(await z.file("chats.json").async("string"));for(const c of cs)await save(c);
+ for(const k of Object.keys(z.files)){const e=z.files[k];if(e.dir||!k.startsWith("media/"))continue;const b=await e.async("blob");await op("media","readwrite",s=>s.put(b,k.slice(6)))}
+ await load();showList()}
+async function saveFile(name,blob){try{if(window.claude&&claude.use){const d=await claude.use("downloads");if(d){await d.save({filename:name,data:blob});return}}}catch(e){}const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+async function exportAll(){try{const z=new JSZip();z.file("chats.json",JSON.stringify(await op("chats","readonly",s=>s.getAll())));const ks=await op("media","readonly",s=>s.getAllKeys());for(const k of ks)z.file("media/"+k,await op("media","readonly",s=>s.get(k)));await saveFile("ruhi-backup.zip",await z.generateAsync({type:"blob",compression:"STORE"}))}catch(e){ask("Backup failed: "+e.message)}}
+/* helpers */
+function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function fmt(s){s=esc(s);s=s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" data-u="$1">$1</a>');return s.replace(/\*([^*\n]+)\*/g,"<b>$1</b>").replace(/(^|\s)_([^_\n]+)_/g,"$1<i>$2</i>").replace(/~([^~\n]+)~/g,"<s>$1</s>")}
+function color(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%360;return`hsl(${h},55%,45%)`}
+const av=(c,z)=>`<div class="av" style="width:${z}px;height:${z}px;font-size:${z*.42}px;${c.photo?`background-image:url(${c.photo});background-size:cover`:""}">${c.photo?"":esc((c.title[0]||"?").toUpperCase())}</div>`;
+const ext=f=>(f.split(".").pop()||"").toLowerCase();
+const isMedia=f=>/^(jpe?g|png|gif|webp|mp4|mov|3gp|webm)$/.test(ext(f)),isAud=f=>/^(opus|mp3|m4a|ogg|aac|wav)$/.test(ext(f));
+function hydrate(){document.querySelectorAll("[data-m]").forEach(async el=>{const k=el.dataset.m;try{await mUrl(k);if(urls[k])el.src=urls[k]+(el.dataset.t==="video"?"#t=0.1":"");else el.outerHTML='<span class="file">📎 '+esc(k.split("/").pop())+" (not imported)</span>"}catch(e){}})}
+const mvHtml=(k,tag)=>`<span class="mv ${tag}" data-v="${esc(k)}"><${tag} data-m="${esc(k)}" data-t="${tag}" ${tag==="img"?'alt=""':'playsinline preload="metadata" muted'}></${tag}></span>`;
+const fico=f=>ext(f)==="pdf"?"📕":/^(xlsx?|csv)$/.test(ext(f))?"📊":/^(docx?|txt)$/.test(ext(f))?"📝":"📎";
+/* screens */
+function chrome(m){mode=m;sel.clear();$("#bar").style.display="none";$("#emo").style.display="none";$("#dock").style.display=m==="chat"?"block":"none";$("#fab").style.display=m==="list"?"block":"none";window.scrollTo(0,0)}
+function showList(){cur=null;chrome("list");$("#hd").innerHTML='<h1><span style="color:#ffc2dd">RU</span><span style="color:#b9f6ca">HI</span> 🫰</h1><button id="gear" aria-label="Settings">⚙️</button>';
+ $("#main").innerHTML=chats.length?chats.map(c=>{const l=c.msgs[c.msgs.length-1];return`<div class="it" data-o="${c.id}">${av(c,46)}<div class="t"><b>${esc(c.title)}</b><small>${c.kind==="combo"?"🔗 Combined · ":""}${c.kind==="combo"?c.src.reduce((n,id)=>n+((chats.find(x=>x.id===id)||{msgs:[]}).msgs.length),0)+c.msgs.length:c.msgs.length} messages${l?" · "+esc(l.d):""}</small></div><button class="x" data-x="${c.id}" aria-label="Delete">🗑</button></div>`}).join(""):'<div class="empty"><p style="font-size:44px;margin:0">💬</p><p>Tap + to import a WhatsApp chat export and read it here, looking just like WhatsApp.</p></div>'}
+function openChat(id){cur=chats.find(c=>c.id===id);if(!cur)return;limit=400;chrome("chat");$("#q").value="";renderMsgs(true)}
+function hdChat(){if(sel.size){$("#hd").innerHTML=`<button id="sx">✕</button><h1>${sel.size} selected</h1><button id="skp" aria-label="Key point">⭐</button><button id="sdel" aria-label="Delete">🗑</button>`;return}
+ $("#hd").innerHTML=`<button id="back">←</button><div data-pf="1" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer">${av(cur,36)}<h1>${esc(cur.title)}${cur.kind==="combo"?'<small style="display:block;font-weight:400;font-size:12px;opacity:.85">'+cur.src.map(id=>esc((chats.find(x=>x.id===id)||{title:"?"}).title)).join(" + ")+'</small>':""}</h1></div><button id="srch" aria-label="Search">🔍</button>`}
+function renderMsgs(bottom){view=buildView();hdChat();const q=$("#q").value.toLowerCase();const vs=q?view.filter(x=>(x.m.b+x.m.s).toLowerCase().includes(q)):view;
+ const start=Math.max(0,vs.length-limit),group=new Set(view.map(x=>x.m.s).filter(Boolean)).size>2;let h="",last="";
+ if(start>0)h+='<div class="more"><button id="earlier">Load earlier messages</button></div>';
+ const combo=cur.kind==="combo",ct=id=>(chats.find(o=>o.id===id)||{title:""}).title;let lc="";for(const x of vs.slice(start)){const m=x.m,key=x.c+":"+x.i;
+  if(m.d!==last){h+=`<div class="day"><span>${esc(m.d)}</span></div>`;last=m.d}
+  if(!m.s){h+=`<div class="sys"><span>${esc(m.b)}</span></div>`;continue}
+  const out=meSet.has(m.s),f=fileOf(m.b);let body="";
+  if(f){const k=x.c+"/"+f;body+=isMedia(f)?mvHtml(k,/^(mp4|mov|3gp|webm)$/.test(ext(f))?"video":"img"):isAud(f)?`<audio data-m="${esc(k)}" data-t="audio" controls></audio>`:`<span class="file" data-f="${esc(k)}">${fico(f)} ${esc(f)}</span><br>`;
+   const rest=m.b.replace(/<attached:[^>]*>/,"").replace(f+" (file attached)","").trim();if(rest)body+=fmt(rest)}
+  else if(/^<Media omitted>$/i.test(m.b.trim()))body='<i style="color:var(--mut)">📷 Media not included in export</i>';else body=fmt(m.b);
+  h+=`<div class="row ${out?"o":""} ${sel.has(key)?"s":""}" data-k="${key}"><div class="b">${combo&&x.c!==cur.id?`<span class="nm" style="color:${color(ct(x.c))}">${esc(ct(x.c))}</span>`:""}${group&&!out&&!combo?`<span class="nm" style="color:${color(m.s)}">${esc(m.s)}</span>`:""}${m.k?`<span class="star">⭐ ${esc(m.k)}</span>`:""}${body}<span class="tm">${esc(m.t)}</span></div></div>`}
+ $("#main").innerHTML='<div id="msgs">'+(h||'<div class="empty">No messages found.</div>')+"</div>";hydrate();if(bottom)window.scrollTo(0,document.body.scrollHeight)}
+function toggleSel(k){sel.has(k)?sel.delete(k):sel.add(k);hdChat();const r=document.querySelector('.row[data-k="'+k+'"]');if(r)r.classList.toggle("s",sel.has(k))}
+const selItems=()=>[...sel].map(k=>{const [c,i]=k.split(":");return [chats.find(x=>x.id===c),+i]}).filter(x=>x[0]);
+async function keypoint(){const t=await inp("Tag this key point (memory, important…)","");if(t===null)return;const s=new Set();for(const [c,i] of selItems()){c.msgs[i].k=t||"Key point";s.add(c)}for(const c of s)await save(c);sel.clear();renderMsgs(false)}
+async function delSel(){if(!await ask("Delete "+sel.size+" selected message(s)? This can’t be undone.","Delete"))return;const by={};for(const [c,i] of selItems())(by[c.id]=by[c.id]||{c,ix:[]}).ix.push(i);for(const id in by){const {c,ix}=by[id];ix.sort((a,b)=>b-a).forEach(i=>c.msgs.splice(i,1));await save(c)}sel.clear();renderMsgs(false)}
+async function send(){const v=$("#ti").value.trim();if(!v||!cur)return;const n=new Date();cur.msgs.push({d:n.toLocaleDateString(),t:n.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),s:cur.me||"Me",b:v,ts:n.getTime()});$("#ti").value="";await save(cur);renderMsgs(true)}
+/* profile */
+const PAY=/(₹|rs\.?|inr|\$|€|£|usd|eur)\s?\d[\d,]*(\.\d+)?|\d[\d,]*(\.\d+)?\s?(rs|inr|rupees|usd|dollars)\b/i,PK=/(paid|payment|sent|received|transfer|upi|transaction|credited|debited|refund|invoice|bill)/i;
+function showProfile(){chrome("profile");view=buildView();$("#hd").innerHTML='<button id="back">←</button><h1>Contact info</h1>';
+ const files=view.map(x=>({x,f:fileOf(x.m.b)})).filter(o=>o.f).reverse();
+ const media=files.filter(o=>isMedia(o.f)),docs=files.filter(o=>!isMedia(o.f)&&!isAud(o.f));
+ const links=[];view.forEach(x=>(x.m.b.match(/https?:\/\/[^\s<]+/g)||[]).forEach(u=>links.push({u,x})));links.reverse();
+ const kps=view.filter(x=>x.m.k).reverse().map(x=>({x})),pays=view.filter(x=>PK.test(x.m.b)&&PAY.test(x.m.b)).reverse().map(x=>({x}));
+ const T=[["media","Media",media.length],["docs","Docs",docs.length],["links","Links",links.length],["kp","Key points",kps.length],["pay","Payments",pays.length]];
+ const meta=x=>esc(x.m.s||"")+" · "+esc(x.m.d);let c="";
+ if(ptab==="media")c=media.length?'<div class="grid">'+media.map(o=>mvHtml(o.x.c+"/"+o.f,/^(mp4|mov|3gp|webm)$/.test(ext(o.f))?"video":"img")).join("")+"</div>":'<div class="empty">No photos or videos</div>';
+ if(ptab==="docs")c=docs.map(o=>`<div class="li" data-f="${esc(o.x.c+"/"+o.f)}"><span style="font-size:26px">${fico(o.f)}</span><div>${esc(o.f)}<small>${meta(o.x)}</small></div></div>`).join("")||'<div class="empty">No documents</div>';
+ if(ptab==="links")c=links.map(o=>`<div class="li" data-lu="${esc(o.u)}"><span style="font-size:26px">🔗</span><div>${esc(o.u)}<small>${meta(o.x)}</small></div></div>`).join("")||'<div class="empty">No links</div>';
+ if(ptab==="kp")c=kps.map(o=>`<div class="li"><span style="font-size:22px">⭐</span><div><b>${esc(o.x.m.k)}</b><br>${esc(o.x.m.b.slice(0,300))}<small>${meta(o.x)}</small></div><button class="x" data-rk="${o.x.c}:${o.x.i}" style="background:none;border:0;color:var(--mut);font-size:18px">✕</button></div>`).join("")||'<div class="empty">Long-press a message in the chat, then tap ⭐ to save a key point.</div>';
+ if(ptab==="pay")c=pays.map(o=>`<div class="li"><span style="font-size:24px">💳</span><div><b>${esc(o.x.m.b.match(PAY)[0])}</b><br>${esc(o.x.m.b.slice(0,200))}<small>${meta(o.x)}</small></div></div>`).join("")||'<div class="empty">No payment messages found (looks for amounts like ₹500 or $20 with words like paid, sent, UPI).</div>';
+ const others=chats.filter(x=>x.id!==cur.id);
+ $("#main").innerHTML=`<div class="pf">${av(cur,96)}<h2>${esc(cur.title)}</h2><small>${view.length} messages</small><div class="r2"><button class="btn sm" id="ren">✏️ Rename</button><button class="btn sm" id="ph">📷 Photo</button><button class="btn sm g" id="rot">↻ Rotate</button><button class="btn sm g" id="rph">Remove photo</button></div><div class="r2"><button class="btn sm g" id="who2">👤 I am: ${esc(cur.me||"?")}</button><button class="btn sm red" id="delc">🗑 Delete chat</button></div></div>
+ ${cur.kind==="combo"?`<div class="sec"><h4>COMBINED FROM</h4>${cur.src.map(id=>esc((chats.find(x=>x.id===id)||{title:"(removed chat)"}).title)).join("<br>")}</div>`:""}
+ <div class="tabs">${T.map(([k,l,n])=>`<button data-pt="${k}" class="${ptab===k?"on":""}">${l} (${n})</button>`).join("")}</div>${c}`;hydrate()}
+/* settings, lock, storage */
+const getPin=()=>{try{return localStorage.getItem(LK)}catch(e){return null}};
+async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("ruhi"+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+async function setPin(){const a=await inp("New PIN (4 to 6 digits)","",1);if(a===null)return;if(!/^\d{4,6}$/.test(a)){await dlg("The PIN must be 4 to 6 digits.",[["OK"]]);return}const b=await inp("Type the PIN again","",1);if(b!==a){await dlg("The PINs didn’t match.",[["OK"]]);return}try{localStorage.setItem(LK,await sha(a));localStorage.setItem(LK+"n",a.length)}catch(e){}showSettings()}
+function lockNow(){buf="";$("#lock").classList.add("on");dots()}
+function dots(){const n=+((()=>{try{return localStorage.getItem(LK+"n")}catch(e){}})()||4);$("#dots").innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<buf.length?"f":""}"></i>`).join("")}
+async function pinKey(d){if(d==="del")buf=buf.slice(0,-1);else buf+=d;dots();const n=$("#dots").children.length;if(buf.length===n){if(await sha(buf)===getPin())$("#lock").classList.remove("on");else{$("#dots").classList.add("shake");setTimeout(()=>$("#dots").classList.remove("shake"),400)}buf="";setTimeout(dots,150)}}
+$("#pad").innerHTML=["1","2","3","4","5","6","7","8","9","","0","del"].map(d=>d===""?"<span></span>":`<button data-d="${d}">${d==="del"?"⌫":d}</button>`).join("");
+async function showSettings(){chrome("settings");$("#hd").innerHTML='<button id="back">←</button><h1>Settings</h1>';const pin=getPin();
+ let sz={},tot=0,est={usage:0,quota:0};try{const ks=await op("media","readonly",s=>s.getAllKeys()),bs=await op("media","readonly",s=>s.getAll());ks.forEach((k,i)=>{const id=String(k).split("/")[0],n=bs[i]?bs[i].size:0;sz[id]=(sz[id]||0)+n;tot+=n});est=await navigator.storage.estimate()}catch(e){}
+ const g=n=>n>=1e9?(n/1e9).toFixed(2)+" GB":(n/1e6).toFixed(1)+" MB";
+ $("#main").innerHTML=`<div class="sec"><h4>APP LOCK</h4>${pin?"<p>PIN lock is ON. RUHI locks whenever you leave the page.</p>":"<p>Protect RUHI with a PIN.</p>"}<div class="r2" style="justify-content:flex-start"><button class="btn sm" id="setpin">${pin?"Change PIN":"Set PIN"}</button>${pin?'<button class="btn sm g" id="rmpin">Remove PIN</button>':""}</div></div>
+ <div class="sec"><h4>STORAGE</h4><p>RUHI uses <b>${g(tot)}</b> (media) · whole browser site: ${g(est.usage||0)} of about ${g(est.quota||0)} allowed.</p>${chats.filter(c=>c.kind!=="combo").map(c=>`<div style="margin:8px 0">${esc(c.title)} <span style="float:right;color:var(--mut)">${g(sz[c.id]||0)}</span><div class="bar"><i style="width:${tot?Math.round((sz[c.id]||0)/tot*100):0}%"></i></div></div>`).join("")||"<p style='color:var(--mut)'>No chats yet.</p>"}<p style="color:var(--mut);font-size:13px">Videos use the most space. Delete a chat with big videos, or free space on your phone itself (old apps, downloads, videos in the gallery).</p></div>
+ <div class="sec"><h4>BACKUP</h4><div class="r2" style="justify-content:flex-start"><button class="btn sm" id="exp">Export backup</button><button class="btn sm g" id="imp">Restore backup</button></div><p style="color:var(--mut);font-size:13px">Includes chats, names, key points and media. Large backups need free memory.</p></div>`}
+/* chat actions */
+function askMe(c){$("#panel").innerHTML='<h3 style="margin:0 0 6px">Which one is you?</h3><p style="color:var(--mut);margin:0 0 8px;font-size:13px">Your messages show on the right, like in WhatsApp.</p>'+c.senders.map(s=>`<button class="opt" data-me="${esc(s)}">${esc(s)}</button>`).join("");$("#panel").dataset.id=c.id;$("#sheet").classList.add("open")}
+async function delChat(id){const c=chats.find(x=>x.id===id);if(!c)return;if(!await ask(c.kind==="combo"?'Delete the combined chat "'+c.title+'"? Your original chats stay.':'Delete "'+c.title+'" and all its photos and videos? This can’t be undone.','Delete'))return;
+ try{await op("chats","readwrite",s=>s.delete(id));await op("media","readwrite",s=>s.delete(IDBKeyRange.bound(id+"/",id+"/\uffff")));Object.keys(urls).filter(k=>k.startsWith(id+"/")).forEach(k=>{URL.revokeObjectURL(urls[k]);delete urls[k]})}catch(e){}
+ chats.forEach(o=>{if(o.src&&o.src.includes(id)){o.src=o.src.filter(x=>x!==id);save(o)}});await load();showList()}
+async function cleanup(){try{const ids=new Set(chats.map(c=>c.id));const ks=await op("media","readonly",s=>s.getAllKeys());for(const k of ks)if(!ids.has(String(k).split("/")[0]))await op("media","readwrite",s=>s.delete(k))}catch(e){}}
+function loadImg(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
+const readURL=f=>new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result);x.readAsDataURL(f)});
+async function sq(src,rot){const im=await loadImg(src);if(!im)return"";const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d"),s=Math.min(im.width,im.height);g.translate(128,128);if(rot)g.rotate(Math.PI/2);g.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,-128,-128,256,256);return c.toDataURL("image/jpeg",.8)}
+/* viewer */
+async function showV(){const k=vi[vx],u=await mUrl(k);if(!u)return;const isV=/\.(mp4|mov|3gp|webm)$/i.test(k);$("#vbody").innerHTML=isV?`<video src="${u}" controls autoplay playsinline></video>`:`<img src="${u}" alt="">`;$("#vcap").textContent=(vx+1)+" / "+vi.length}
+function openV(k){vi=[...document.querySelectorAll(".mv")].map(e=>e.dataset.v);vx=Math.max(0,vi.indexOf(k));$("#viewer").classList.remove("d");$("#vbody").className="";$("#viewer").classList.add("open");showV()}
+function closeV(){$("#viewer").classList.remove("open","d");$("#vbody").className="";$("#vbody").innerHTML=""}
+function step(n){const x=vx+n;if(x>=0&&x<vi.length){vx=x;showV()}}
+function loadPdf(){return new Promise((res,rej)=>{if(window.pdfjsLib)return res();const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";s.onload=()=>{pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";res()};s.onerror=rej;document.head.appendChild(s)})}
+async function openDoc(k){const name=k.split("/").pop(),x=ext(name),vb=$("#vbody"),msg=t=>vb.innerHTML='<p style="color:#fff">'+t+"</p>";vi=[];$("#viewer").classList.add("open","d");vb.className="doc";$("#vcap").textContent=name;msg("Loading…");
+ try{const b=await op("media","readonly",s=>s.get(k));if(!b){msg("This file wasn’t included in the import.");return}
+ if(x==="pdf"){await loadPdf();const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await b.arrayBuffer())}).promise;vb.innerHTML="";for(let i=1;i<=Math.min(pdf.numPages,60);i++){const pg=await pdf.getPage(i),vp=pg.getViewport({scale:1.5}),c=document.createElement("canvas");c.width=vp.width;c.height=vp.height;vb.appendChild(c);await pg.render({canvasContext:c.getContext("2d"),viewport:vp}).promise}}
+ else if(/^(txt|csv|json|md)$/.test(x)){const p=document.createElement("pre");p.textContent=(await b.text()).slice(0,200000);vb.innerHTML="";vb.appendChild(p)}else msg("Preview isn’t available for this file type here.")}catch(e){msg("Couldn’t open this file here.")}}
+function startCombine(){const L=chats.filter(c=>c.kind!=="combo");if(L.length<2){dlg("Import at least two chats first, then you can combine them.",[["OK"]]);return}
+ const p=$("#panel");p.innerHTML='<h3 style="margin:0 0 8px">Select chats to combine</h3>'+L.map(c=>`<label style="display:flex;gap:10px;align-items:center;padding:8px 0"><input type="checkbox" data-cs="${c.id}"> ${esc(c.title)}</label>`).join("")+'<p id="cw" style="color:#d93025;font-size:13px;margin:6px 0 0"></p><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="opt" style="display:inline-block;width:auto" id="cx">Cancel</button><button class="opt" style="display:inline-block;width:auto;background:#25d366;color:#fff;border:0" id="cn">Next</button></div>';
+ $("#sheet").classList.add("open");$("#cx").onclick=()=>$("#sheet").classList.remove("open");
+ $("#cn").onclick=async()=>{const ids=[...p.querySelectorAll("[data-cs]")].filter(x=>x.checked).map(x=>x.dataset.cs);if(ids.length<2){$("#cw").textContent="Select at least two chats.";return}
+  $("#sheet").classList.remove("open");const name=await inp("Name the combined chat","");if(!name)return;
+  const src=ids.map(id=>chats.find(x=>x.id===id));const combo={id:Date.now().toString(36),title:name,kind:"combo",src:ids,msgs:[],senders:[...new Set(src.flatMap(x=>x.senders))],me:src[0].me||"",added:Date.now()};
+  await save(combo);await load();showList()}}
+/* events */
+const main=$("#main");
+document.addEventListener("pointerdown",()=>{lp=false},true);
+main.addEventListener("pointerdown",e=>{const r=e.target.closest(".row[data-k]");if(!r)return;clearTimeout(lt);lt=setTimeout(()=>{lp=true;toggleSel(r.dataset.k)},500)});
+["pointerup","pointermove","pointercancel"].forEach(ev=>main.addEventListener(ev,()=>clearTimeout(lt)));
+main.addEventListener("contextmenu",e=>{if(e.target.closest(".row[data-k]"))e.preventDefault()});
+document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
+ if(c("#vclose")||t.id==="vbody"||t.id==="viewer"){closeV();return}
+ if(t.matches("#vbody img")){t.classList.toggle("z");return}
+ if(c("#vprev")){step(-1);return}if(c("#vnext")){step(1);return}
+ if(t.id==="sheet"){t.classList.remove("open");return}
+ const kd=c("[data-d]");if(kd){pinKey(kd.dataset.d);return}
+ const a=c("a[data-u]");if(a){e.preventDefault();if(!sel.size&&!lp)openLink(a.dataset.u);lp=false;return}
+ const rw=c(".row[data-k]");if(rw){if(lp){lp=false;return}if(sel.size){toggleSel(rw.dataset.k);return}}
+ const mv=c(".mv");if(mv){openV(mv.dataset.v);return}
+ const ff=c("[data-f]");if(ff){openDoc(ff.dataset.f);return}
+ const lu=c("[data-lu]");if(lu){openLink(lu.dataset.lu);return}
+ const rk=c("[data-rk]");if(rk){const [id,i]=rk.dataset.rk.split(":"),ch=chats.find(x=>x.id===id);if(ch){delete ch.msgs[+i].k;await save(ch);showProfile()}return}
+ const dx=c("[data-x]");if(dx){delChat(dx.dataset.x);return}
+ const it=c("[data-o]");if(it){openChat(it.dataset.o);return}
+ const pt=c("[data-pt]");if(pt){ptab=pt.dataset.pt;showProfile();return}
+ if(t.dataset.cb){const s=new Set(cur.comb||[]);t.checked?s.add(t.dataset.cb):s.delete(t.dataset.cb);cur.comb=[...s];await save(cur);return}
+ if(t.id==="sw"){cur.showComb=t.checked;await save(cur);return}
+ if(t.dataset.me!==undefined){const ch=chats.find(x=>x.id===$("#panel").dataset.id);ch.me=t.dataset.me;await save(ch);$("#sheet").classList.remove("open");if(mode==="profile"){cur=ch;showProfile()}else openChat(ch.id);return}
+ if(t.dataset.e){$("#ti").value+=t.dataset.e;return}
+ if(c("#back")){if(mode==="profile")openChat(cur.id);else showList();return}
+ if(c("[data-pf]")){showProfile();return}
+ if(c("#srch")){const b=$("#bar");b.style.display=b.style.display==="block"?"none":"block";if(b.style.display==="block")$("#q").focus();return}
+ if(c("#sx")){sel.clear();renderMsgs(false);return}
+ if(c("#skp")){keypoint();return}if(c("#sdel")){delSel();return}
+ if(t.id==="earlier"){limit+=400;renderMsgs(false);return}
+ if(c("#gear")){showSettings();return}
+ if(c("#emb")){const m=$("#emo");m.style.display=m.style.display==="grid"?"none":"grid";return}
+ if(c("#snd")){send();return}
+ if(c("#imp")){$("#file").click();return}
+ if(c("#fab")){dlg("Add to RUHI",[["Import chat",()=>$("#file").click()],["Combine chats",startCombine],["Cancel"]]);return}
+ if(c("#ren")){const n=await inp("Chat name",cur.title);if(n){cur.title=n;await save(cur);showProfile()}return}
+ if(c("#ph")){$("#pfile").click();return}
+ if(c("#rot")){if(cur.photo){cur.photo=await sq(cur.photo,1);await save(cur);showProfile()}return}
+ if(c("#rph")){delete cur.photo;await save(cur);showProfile();return}
+ if(c("#who2")){askMe(cur);return}
+ if(c("#delc")){delChat(cur.id);return}
+ if(c("#setpin")){setPin();return}
+ if(c("#rmpin")){if(await ask("Remove the PIN lock?","Remove")){try{localStorage.removeItem(LK)}catch(x){}showSettings()}return}
+ if(c("#exp")){exportAll();return}});
+$("#q").oninput=()=>renderMsgs(false);
+$("#ti").onkeydown=e=>{if(e.key==="Enter")send()};
+$("#file").onchange=async e=>{const f=[...e.target.files];e.target.value="";if(f.length)try{await importFiles(f)}catch(x){ask("Import failed: "+x.message)}};
+$("#pfile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(f&&cur){cur.photo=await sq(await readURL(f));await save(cur);showProfile()}};
+$("#emo").innerHTML="😀 😁 😂 🤣 😊 😍 😘 😎 🤔 😢 😭 😡 😴 🤗 😅 😇 🥰 😜 🙈 🤷 👍 👎 🙏 👏 🙌 💪 🤝 👋 ✌️ 🔥 🎉 ❤️ 💔 💯 ✅ ❌ ⭐ 🌹 🎂 🎁 📷 📞 🏠 🚗 ✈️ 🍕 🍔 ☕ 🍺 ⚽ 🎵 😉 😋 😏 😬 🙄 😱 🤩 🥳 😤 🤯 😷 💤 👀 🙂 😆 😳 🥺 😌 🤞 👌 💙 💚 💛 🧡 💜".split(" ").map(x=>`<button data-e="${x}">${x}</button>`).join("");
+$("#viewer").addEventListener("touchstart",e=>{tx0=e.touches[0].clientX},{passive:true});
+$("#viewer").addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-tx0;if(Math.abs(d)>70)step(d<0?1:-1)},{passive:true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeV()});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&getPin())lockNow()});
+if(getPin())lockNow();
+load().then(()=>{showList();cleanup();$("#spt").textContent="✓ "+chats.length+(chats.length===1?" chat":" chats")+" backed up";setTimeout(()=>{const s=$("#splash");s.style.opacity=0;setTimeout(()=>s.remove(),500)},2800)});
+if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
