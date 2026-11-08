@@ -1,7 +1,7 @@
 {
- "name": "RUHI",
- "short_name": "RUHI",
- "description": "Your personal backup",
+ "name": "Ruhi",
+ "short_name": "Ruhi",
+ "description": "Gift for loved ones",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",

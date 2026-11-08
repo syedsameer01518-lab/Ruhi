@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>RUHI</title>
+<title>Ruhi</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#008069">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="RUHI">
+<meta name="apple-mobile-web-app-title" content="Ruhi">
 <script>try{var k=localStorage.getItem("ruhi:skin");if(k)document.documentElement.dataset.skin=k}catch(e){}</script>
 <script>/*!
 
@@ -35,6 +35,27 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 :root[data-skin="peach"]{--hd:#e8643f;--brand:#e8643f;--ac:#ff8a5c;--sel:rgba(255,138,92,.25);--l1:#fff;--bg:#fff4ec;--in:#fff;--out:#ffe0cc;--tx:#3a2418;--mut:#8f7260;--pill:#ffe6d6;--pt:#9a5a3c;--card:#fff;--bd:#f6dccb;color-scheme:light}
 :root[data-skin="night"]{--hd:#2a1b2e;--brand:#2a1b2e;--ac:#ff6fa5;--sel:rgba(255,111,165,.25);--bg:#150f18;--in:#2a1f2e;--out:#7a2750;--tx:#f5e6ee;--mut:#b79aa8;--pill:#2f2233;--pt:#c9a9b9;--card:#201722;--bd:#35283a;color-scheme:dark}
 .skins{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.skin{display:flex;align-items:center;gap:8px;padding:10px;border:2px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);font:inherit;font-size:14px;cursor:pointer;text-align:left}.skin.on{border-color:var(--ac)}.skin i{width:22px;height:22px;border-radius:50%;flex:none}
+@font-face{font-family:RuhiScript;src:url(data:font/woff;base64,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) format("woff");font-display:block}
+@font-face{font-family:RuhiCaps;src:url(data:font/woff;base64,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) format("woff");font-display:block}
+.rlogo{font-family:RuhiScript,cursive;font-size:30px;line-height:1;color:var(--l1,#ffd1e6)}
+#splash{overflow:hidden}
+#splash .rword{font-family:RuhiScript,cursive;font-size:96px;line-height:1.1;color:var(--l1,#ffd1e6);clip-path:inset(0 100% 0 0);animation:wr 1.5s .5s cubic-bezier(.4,0,.2,1) forwards;text-shadow:0 4px 24px rgba(0,0,0,.25);padding:0 .2em;position:relative;z-index:2}
+@keyframes wr{to{clip-path:inset(-10% -10% -10% 0)}}
+#splash .gift{margin-top:14px;font-family:RuhiCaps,serif;letter-spacing:.28em;font-size:17px;text-shadow:0 1px 10px rgba(0,0,0,.3);text-align:center;opacity:0;animation:fade .9s 2s forwards;padding:0 18px;position:relative;z-index:2}
+.bfw{position:absolute;left:0;top:0;opacity:0;animation-duration:3.4s;animation-timing-function:ease-in-out;animation-fill-mode:forwards;z-index:1}
+.fly1{animation-name:fly1}.fly2{animation-name:fly2;animation-delay:.3s}.fly3{animation-name:fly3;animation-delay:.6s}
+@keyframes fly1{0%{transform:translate(-18vw,85vh) rotate(25deg) scale(.6);opacity:0}12%{opacity:1}35%{transform:translate(28vw,58vh) rotate(-18deg) scale(.9)}65%{transform:translate(10vw,36vh) rotate(18deg) scale(1.05)}100%{transform:translate(16vw,34vh) rotate(-8deg) scale(1);opacity:1}}
+@keyframes fly2{0%{transform:translate(108vw,72vh) rotate(-30deg) scale(.6);opacity:0}12%{opacity:1}40%{transform:translate(66vw,50vh) rotate(15deg) scale(.9)}70%{transform:translate(80vw,30vh) rotate(-15deg) scale(1.1)}100%{transform:translate(74vw,28vh) rotate(10deg) scale(1.05);opacity:1}}
+@keyframes fly3{0%{transform:translate(45vw,-14vh) rotate(10deg) scale(.5);opacity:0}15%{opacity:1}50%{transform:translate(30vw,52vh) rotate(-20deg) scale(.8)}100%{transform:translate(58vw,64vh) rotate(12deg) scale(.85);opacity:1}}
+.bfw svg{display:block;animation:bob 1.3s ease-in-out infinite alternate}
+@keyframes bob{from{translate:0 -6px}to{translate:0 6px}}
+.wings{transform-box:fill-box;transform-origin:center;animation:flap .42s ease-in-out infinite alternate}
+@keyframes flap{from{transform:scaleX(1)}to{transform:scaleX(.28)}}
+.sp{position:absolute;color:#fff;font-style:normal;font-size:14px;opacity:0;animation:tw 2.4s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:.8;transform:scale(1)}}
+#vshow{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:18px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}#viewer.d #vshow{display:none}
+.gh{grid-column:1/-1;padding:10px 14px 6px;font-weight:600;background:var(--card)}
+.row.hl .b{animation:hl 2.2s}@keyframes hl{0%,70%{box-shadow:0 0 0 4px var(--ac),0 0 18px var(--ac)}100%{box-shadow:0 1px 1px rgba(0,0,0,.13)}}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
@@ -99,8 +120,9 @@ a{color:#53bdeb}
 </style>
 </head>
 <body>
-<div id="splash"><div class="word"><span>R</span><span>U</span><span>H</span><span>I</span><span>🫰</span></div><div class="tag">Your personal backup</div><div class="pb"><i></i></div><div class="ok" id="spt">✓ Backed up</div></div>
-<div id="lock"><div style="font-size:30px;font-weight:800"><span style="color:var(--l1,#ffc2dd)">RU</span><span style="color:#b9f6ca">HI</span> 🫰</div><div style="opacity:.85;margin-top:6px">Enter your PIN</div><div id="dots"></div><div id="pad"></div></div>
+<div id="splash"><div class="rword">Ruhi</div><div class="gift">GIFT FOR LOVED ONES</div><div class="pb"><i></i></div><div class="ok" id="spt">✓ Backed up</div></div>
+<script>try{var _s=JSON.parse(localStorage.getItem("ruhi:state"));if(_s&&Date.now()-_s.t<1800000)document.getElementById("splash").remove()}catch(e){}</script>
+<div id="lock"><div style="font-size:30px;font-weight:800"><span class="rlogo">Ruhi</span> 🦋</div><div style="opacity:.85;margin-top:6px">Enter your PIN</div><div id="dots"></div><div id="pad"></div></div>
 <header id="hd"></header>
 <div id="bar"><input id="q" type="search" placeholder="Search in this chat"></div>
 <div class="main" id="main"></div>
@@ -109,17 +131,19 @@ a{color:#53bdeb}
 <input id="file" type="file" multiple accept=".txt,.zip,image/*,video/*,audio/*,application/pdf" hidden>
 <input id="pfile" type="file" accept="image/*" hidden>
 <div class="sheet" id="sheet"><div class="panel" id="panel"></div></div>
-<div id="viewer"><div id="vtop"><button id="vclose" aria-label="Close">✕</button><span id="vcap"></span></div><div id="vbody"></div><button class="vnav" id="vprev">‹</button><button class="vnav" id="vnext">›</button></div>
+<div id="viewer"><div id="vtop"><button id="vclose" aria-label="Close">✕</button><div id="vcap" style="flex:1;line-height:1.25;font-size:14px"></div><button id="vshow">💬 Show in chat</button></div><div id="vbody"></div><button class="vnav" id="vprev">‹</button><button class="vnav" id="vnext">›</button></div>
 
 <script>
 const $=s=>document.querySelector(s);
-let chats=[],cur=null,view=[],limit=400,urls={},sel=new Set(),lp=false,lt=0,mode="list",ptab="media",meSet=new Set(),vi=[],vx=0,tx0=0,buf="";
+let chats=[],cur=null,view=[],limit=400,urls={},sel=new Set(),lp=false,lt=0,mode="list",ptab="media",meSet=new Set(),vi=[],vm=[],vx=0,tx0=0,buf="";
 const LK="ruhi:pin",DF={};
-const VERSION=2,SKINS=[["","WhatsApp Green","#25d366"],["rose","Rose Blush","#ec4b8b"],["lavender","Lavender Dream","#9a73f0"],["peach","Peach Sunset","#ff8a5c"],["night","Midnight Rose","#2a1b2e"]];
+const ST=(()=>{try{return JSON.parse(localStorage.getItem("ruhi:state"))}catch(e){return null}})(),gap=ST?Date.now()-ST.t:Infinity,resume=!!ST&&gap<1800000;
+function saveState(){try{localStorage.setItem("ruhi:state",JSON.stringify({t:Date.now(),mode,id:cur&&cur.id,y:window.scrollY,tab:ptab}))}catch(e){}}
+const VERSION=3,SKINS=[["","WhatsApp Green","#25d366"],["rose","Rose Blush","#ec4b8b"],["lavender","Lavender Dream","#9a73f0"],["peach","Peach Sunset","#ff8a5c"],["night","Midnight Rose","#2a1b2e"]];
 let deferredPrompt=null;
 const localGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const getSkin=()=>localGet("ruhi:skin")||"";
-function applySkin(){const k=getSkin(),r=document.documentElement;if(k)r.dataset.skin=k;else delete r.dataset.skin;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(r).getPropertyValue("--brand").trim()||"#008069"}
+function applySkin(){const k=getSkin(),r=document.documentElement;if(k)r.dataset.skin=k;else delete r.dataset.skin;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(r).getPropertyValue("--brand").trim()||"#008069";applyWall()}
 function setSkin(k){try{localStorage.setItem("ruhi:skin",k)}catch(e){}applySkin();showSettings()}
 const isInstalled=()=>matchMedia("(display-mode: standalone)").matches||matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e});
@@ -172,11 +196,11 @@ const av=(c,z)=>`<div class="av" style="width:${z}px;height:${z}px;font-size:${z
 const ext=f=>(f.split(".").pop()||"").toLowerCase();
 const isMedia=f=>/^(jpe?g|png|gif|webp|mp4|mov|3gp|webm)$/.test(ext(f)),isAud=f=>/^(opus|mp3|m4a|ogg|aac|wav)$/.test(ext(f));
 function hydrate(){document.querySelectorAll("[data-m]").forEach(async el=>{const k=el.dataset.m;try{await mUrl(k);if(urls[k])el.src=urls[k]+(el.dataset.t==="video"?"#t=0.1":"");else el.outerHTML='<span class="file">📎 '+esc(k.split("/").pop())+" (not imported)</span>"}catch(e){}})}
-const mvHtml=(k,tag)=>`<span class="mv ${tag}" data-v="${esc(k)}"><${tag} data-m="${esc(k)}" data-t="${tag}" ${tag==="img"?'alt=""':'playsinline preload="metadata" muted'}></${tag}></span>`;
+const mvHtml=(k,tag,mk)=>`<span class="mv ${tag}" data-v="${esc(k)}" data-mk="${mk||""}"><${tag} data-m="${esc(k)}" data-t="${tag}" ${tag==="img"?'alt=""':'playsinline preload="metadata" muted'}></${tag}></span>`;
 const fico=f=>ext(f)==="pdf"?"📕":/^(xlsx?|csv)$/.test(ext(f))?"📊":/^(docx?|txt)$/.test(ext(f))?"📝":"📎";
 /* screens */
-function chrome(m){mode=m;sel.clear();$("#bar").style.display="none";$("#emo").style.display="none";$("#dock").style.display=m==="chat"?"block":"none";$("#fab").style.display=m==="list"?"block":"none";window.scrollTo(0,0)}
-function showList(){cur=null;chrome("list");$("#hd").innerHTML='<h1><span style="color:var(--l1,#ffc2dd)">RU</span><span style="color:#b9f6ca">HI</span> 🫰</h1><button id="gear" aria-label="Settings">⚙️</button>';
+function chrome(m){mode=m;saveState();sel.clear();$("#bar").style.display="none";$("#emo").style.display="none";$("#dock").style.display=m==="chat"?"block":"none";$("#fab").style.display=m==="list"?"block":"none";window.scrollTo(0,0)}
+function showList(){cur=null;chrome("list");$("#hd").innerHTML='<h1><span class="rlogo">Ruhi</span> 🦋</h1><button id="gear" aria-label="Settings">⚙️</button>';
  $("#main").innerHTML=chats.length?chats.map(c=>{const l=c.msgs[c.msgs.length-1];return`<div class="it" data-o="${c.id}">${av(c,46)}<div class="t"><b>${esc(c.title)}</b><small>${c.kind==="combo"?"🔗 Combined · ":""}${c.kind==="combo"?c.src.reduce((n,id)=>n+((chats.find(x=>x.id===id)||{msgs:[]}).msgs.length),0)+c.msgs.length:c.msgs.length} messages${l?" · "+esc(l.d):""}</small></div><button class="x" data-x="${c.id}" aria-label="Delete">🗑</button></div>`}).join(""):'<div class="empty"><p style="font-size:44px;margin:0">💬</p><p>Tap + to import a WhatsApp chat export and read it here, looking just like WhatsApp.</p></div>'}
 function openChat(id){cur=chats.find(c=>c.id===id);if(!cur)return;limit=400;chrome("chat");$("#q").value="";renderMsgs(true)}
 function hdChat(){if(sel.size){$("#hd").innerHTML=`<button id="sx">✕</button><h1>${sel.size} selected</h1><button id="skp" aria-label="Key point">⭐</button><button id="sdel" aria-label="Delete">🗑</button>`;return}
@@ -188,7 +212,7 @@ function renderMsgs(bottom){view=buildView();hdChat();const q=$("#q").value.toLo
   if(m.d!==last){h+=`<div class="day"><span>${esc(m.d)}</span></div>`;last=m.d}
   if(!m.s){h+=`<div class="sys"><span>${esc(m.b)}</span></div>`;continue}
   const out=meSet.has(m.s),f=fileOf(m.b);let body="";
-  if(f){const k=x.c+"/"+f;body+=isMedia(f)?mvHtml(k,/^(mp4|mov|3gp|webm)$/.test(ext(f))?"video":"img"):isAud(f)?`<audio data-m="${esc(k)}" data-t="audio" controls></audio>`:`<span class="file" data-f="${esc(k)}">${fico(f)} ${esc(f)}</span><br>`;
+  if(f){const k=x.c+"/"+f;body+=isMedia(f)?mvHtml(k,/^(mp4|mov|3gp|webm)$/.test(ext(f))?"video":"img",key):isAud(f)?`<audio data-m="${esc(k)}" data-t="audio" controls></audio>`:`<span class="file" data-f="${esc(k)}">${fico(f)} ${esc(f)}</span><br>`;
    const rest=m.b.replace(/<attached:[^>]*>/,"").replace(f+" (file attached)","").trim();if(rest)body+=fmt(rest)}
   else if(/^<Media omitted>$/i.test(m.b.trim()))body='<i style="color:var(--mut)">📷 Media not included in export</i>';else body=fmt(m.b);
   h+=`<div class="row ${out?"o":""} ${sel.has(key)?"s":""}" data-k="${key}"><div class="b">${combo&&x.c!==cur.id?`<span class="nm" style="color:${color(ct(x.c))}">${esc(ct(x.c))}</span>`:""}${group&&!out&&!combo?`<span class="nm" style="color:${color(m.s)}">${esc(m.s)}</span>`:""}${m.k?`<span class="star">⭐ ${esc(m.k)}</span>`:""}${body}<span class="tm">${esc(m.t)}</span></div></div>`}
@@ -207,7 +231,7 @@ function showProfile(){chrome("profile");view=buildView();$("#hd").innerHTML='<b
  const kps=view.filter(x=>x.m.k).reverse().map(x=>({x})),pays=view.filter(x=>PK.test(x.m.b)&&PAY.test(x.m.b)).reverse().map(x=>({x}));
  const T=[["media","Media",media.length],["docs","Docs",docs.length],["links","Links",links.length],["kp","Key points",kps.length],["pay","Payments",pays.length]];
  const meta=x=>esc(x.m.s||"")+" · "+esc(x.m.d);let c="";
- if(ptab==="media")c=media.length?'<div class="grid">'+media.map(o=>mvHtml(o.x.c+"/"+o.f,/^(mp4|mov|3gp|webm)$/.test(ext(o.f))?"video":"img")).join("")+"</div>":'<div class="empty">No photos or videos</div>';
+ if(ptab==="media"){let lm="";c=media.length?'<div class="grid">'+media.map(o=>{const ch=chats.find(z=>z.id===o.x.c),t=ts(ch,o.x.m),lab=t?new Date(t).toLocaleDateString(undefined,{month:"long",year:"numeric"}):o.x.m.d,hd=lab!==lm?(lm=lab,`<div class="gh">${esc(lab)}</div>`):"";return hd+mvHtml(o.x.c+"/"+o.f,/^(mp4|mov|3gp|webm)$/.test(ext(o.f))?"video":"img",o.x.c+":"+o.x.i)}).join("")+"</div>":'<div class="empty">No photos or videos</div>'}
  if(ptab==="docs")c=docs.map(o=>`<div class="li" data-f="${esc(o.x.c+"/"+o.f)}"><span style="font-size:26px">${fico(o.f)}</span><div>${esc(o.f)}<small>${meta(o.x)}</small></div></div>`).join("")||'<div class="empty">No documents</div>';
  if(ptab==="links")c=links.map(o=>`<div class="li" data-lu="${esc(o.u)}"><span style="font-size:26px">🔗</span><div>${esc(o.u)}<small>${meta(o.x)}</small></div></div>`).join("")||'<div class="empty">No links</div>';
  if(ptab==="kp")c=kps.map(o=>`<div class="li"><span style="font-size:22px">⭐</span><div><b>${esc(o.x.m.k)}</b><br>${esc(o.x.m.b.slice(0,300))}<small>${meta(o.x)}</small></div><button class="x" data-rk="${o.x.c}:${o.x.i}" style="background:none;border:0;color:var(--mut);font-size:18px">✕</button></div>`).join("")||'<div class="empty">Long-press a message in the chat, then tap ⭐ to save a key point.</div>';
@@ -227,13 +251,13 @@ $("#pad").innerHTML=["1","2","3","4","5","6","7","8","9","","0","del"].map(d=>d=
 async function showSettings(){chrome("settings");$("#hd").innerHTML='<button id="back">←</button><h1>Settings</h1>';const pin=getPin();
  let sz={},tot=0,est={usage:0,quota:0};try{const ks=await op("media","readonly",s=>s.getAllKeys()),bs=await op("media","readonly",s=>s.getAll());ks.forEach((k,i)=>{const id=String(k).split("/")[0],n=bs[i]?bs[i].size:0;sz[id]=(sz[id]||0)+n;tot+=n});est=await navigator.storage.estimate()}catch(e){}
  const g=n=>n>=1e9?(n/1e9).toFixed(2)+" GB":(n/1e6).toFixed(1)+" MB";let per=false;try{per=await navigator.storage.persisted()}catch(e){}const inst=isInstalled(),lb=localGet("ruhi:lb"),sk=getSkin();
- $("#main").innerHTML=`<div class="sec"><h4>APP LOCK</h4>${pin?"<p>PIN lock is ON. RUHI locks whenever you leave the page.</p>":"<p>Protect RUHI with a PIN.</p>"}<div class="r2" style="justify-content:flex-start"><button class="btn sm" id="setpin">${pin?"Change PIN":"Set PIN"}</button>${pin?'<button class="btn sm g" id="rmpin">Remove PIN</button>':""}</div></div>
- <div class="sec"><h4>APPEARANCE</h4><div class="skins">${SKINS.map(([k,n,c])=>`<button class="skin ${sk===k?"on":""}" data-sk="${k}"><i style="background:${c}"></i>${n}</button>`).join("")}</div><p style="color:var(--mut);font-size:13px;margin:8px 0 0">Soft looks for her: Rose Blush and Lavender Dream. Midnight Rose is a dark pink night look.</p></div>
- <div class="sec"><h4>INSTALL</h4>${inst?"<p>✅ RUHI is installed on this phone and opens even without internet.</p>":`<p>RUHI isn’t installed yet.</p>${deferredPrompt?'<button class="btn sm" id="inst">Install RUHI</button>':'<p style="color:var(--mut);font-size:13px">In Chrome tap ⋮ then <b>Install app</b>. On iPhone tap Share then <b>Add to Home Screen</b>.</p>'}`}</div>
- <div class="sec"><h4>SAFETY</h4>${per?"<p>✅ <b>Protected storage is ON.</b> Your browser won’t delete RUHI’s chats on its own to free space.</p>":'<p>⚠️ Protected storage is OFF.</p><button class="btn sm" id="prot">Turn on protection</button>'}<p style="color:var(--mut);font-size:13px">Everything stays only on this device. Clearing browser data, “Clear site data”, uninstalling the browser or a private tab will erase it. Keep a backup file.</p></div>
- <div class="sec"><h4>STORAGE</h4><p>RUHI uses <b>${g(tot)}</b> (media) · whole browser site: ${g(est.usage||0)} of about ${g(est.quota||0)} allowed.</p>${chats.filter(c=>c.kind!=="combo").map(c=>`<div style="margin:8px 0">${esc(c.title)} <span style="float:right;color:var(--mut)">${g(sz[c.id]||0)}</span><div class="bar"><i style="width:${tot?Math.round((sz[c.id]||0)/tot*100):0}%"></i></div></div>`).join("")||"<p style='color:var(--mut)'>No chats yet.</p>"}<p style="color:var(--mut);font-size:13px">Videos use the most space. Delete a chat with big videos, or free space on your phone itself (old apps, downloads, videos in the gallery).</p></div>
+ $("#main").innerHTML=`<div class="sec"><h4>APP LOCK</h4>${pin?"<p>PIN lock is ON. Ruhi locks whenever you leave the page.</p>":"<p>Protect Ruhi with a PIN.</p>"}<div class="r2" style="justify-content:flex-start"><button class="btn sm" id="setpin">${pin?"Change PIN":"Set PIN"}</button>${pin?'<button class="btn sm g" id="rmpin">Remove PIN</button>':""}</div></div>
+ <div class="sec"><h4>APPEARANCE</h4><div class="skins">${SKINS.map(([k,n,c])=>`<button class="skin ${sk===k?"on":""}" data-sk="${k}"><i style="background:${c}"></i>${n}</button>`).join("")}</div><p style="color:var(--mut);font-size:13px;margin:8px 0 0">Soft looks for her: Rose Blush and Lavender Dream. Midnight Rose is a dark pink night look.</p><h4 style="margin:14px 0 6px">CHAT WALLPAPER</h4><div class="skins">${WALLS.map(([k,n])=>`<button class="skin ${getWall()===k?"on":""}" data-wl="${k}">${n}</button>`).join("")}</div></div>
+ <div class="sec"><h4>INSTALL</h4>${inst?"<p>✅ Ruhi is installed on this phone and opens even without internet.</p>":`<p>Ruhi isn’t installed yet.</p>${deferredPrompt?'<button class="btn sm" id="inst">Install Ruhi</button>':'<p style="color:var(--mut);font-size:13px">In Chrome tap ⋮ then <b>Install app</b>. On iPhone tap Share then <b>Add to Home Screen</b>.</p>'}`}</div>
+ <div class="sec"><h4>SAFETY</h4>${per?"<p>✅ <b>Protected storage is ON.</b> Your browser won’t delete Ruhi’s chats on its own to free space.</p>":'<p>⚠️ Protected storage is OFF.</p><button class="btn sm" id="prot">Turn on protection</button>'}<p style="color:var(--mut);font-size:13px">Everything stays only on this device. Clearing browser data, “Clear site data”, uninstalling the browser or a private tab will erase it. Keep a backup file.</p></div>
+ <div class="sec"><h4>STORAGE</h4><p>Ruhi uses <b>${g(tot)}</b> (media) · whole browser site: ${g(est.usage||0)} of about ${g(est.quota||0)} allowed.</p>${chats.filter(c=>c.kind!=="combo").map(c=>`<div style="margin:8px 0">${esc(c.title)} <span style="float:right;color:var(--mut)">${g(sz[c.id]||0)}</span><div class="bar"><i style="width:${tot?Math.round((sz[c.id]||0)/tot*100):0}%"></i></div></div>`).join("")||"<p style='color:var(--mut)'>No chats yet.</p>"}<p style="color:var(--mut);font-size:13px">Videos use the most space. Delete a chat with big videos, or free space on your phone itself (old apps, downloads, videos in the gallery).</p></div>
  <div class="sec"><h4>BACKUP</h4><p>${lb?"Last backup: "+new Date(+lb).toLocaleString():"No backup made yet."}</p><div class="r2" style="justify-content:flex-start"><button class="btn sm" id="exp">Export backup</button><button class="btn sm g" id="imp">Restore backup</button></div><p style="color:var(--mut);font-size:13px">Includes chats, names, key points and media. Large backups need free memory.</p></div>
- <div class="sec"><h4>ABOUT</h4><p>RUHI version ${VERSION}</p><button class="btn sm g" id="upd">🔄 Check for update</button><p id="upm" style="color:var(--mut);font-size:13px">RUHI updates itself when opened with internet. Your chats are not affected by updates.</p></div>`}
+ <div class="sec"><h4>ABOUT</h4><p>Ruhi version ${VERSION}</p><button class="btn sm g" id="upd">🔄 Check for update</button><p id="upm" style="color:var(--mut);font-size:13px">Ruhi updates itself when opened with internet. Your chats are not affected by updates.</p></div>`}
 /* chat actions */
 function askMe(c){$("#panel").innerHTML='<h3 style="margin:0 0 6px">Which one is you?</h3><p style="color:var(--mut);margin:0 0 8px;font-size:13px">Your messages show on the right, like in WhatsApp.</p>'+c.senders.map(s=>`<button class="opt" data-me="${esc(s)}">${esc(s)}</button>`).join("");$("#panel").dataset.id=c.id;$("#sheet").classList.add("open")}
 async function delChat(id){const c=chats.find(x=>x.id===id);if(!c)return;if(!await ask(c.kind==="combo"?'Delete the combined chat "'+c.title+'"? Your original chats stay.':'Delete "'+c.title+'" and all its photos and videos? This can’t be undone.','Delete'))return;
@@ -244,8 +268,11 @@ function loadImg(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(
 const readURL=f=>new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result);x.readAsDataURL(f)});
 async function sq(src,rot){const im=await loadImg(src);if(!im)return"";const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d"),s=Math.min(im.width,im.height);g.translate(128,128);if(rot)g.rotate(Math.PI/2);g.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,-128,-128,256,256);return c.toDataURL("image/jpeg",.8)}
 /* viewer */
-async function showV(){const k=vi[vx],u=await mUrl(k);if(!u)return;const isV=/\.(mp4|mov|3gp|webm)$/i.test(k);$("#vbody").innerHTML=isV?`<video src="${u}" controls autoplay playsinline></video>`:`<img src="${u}" alt="">`;$("#vcap").textContent=(vx+1)+" / "+vi.length}
-function openV(k){vi=[...document.querySelectorAll(".mv")].map(e=>e.dataset.v);vx=Math.max(0,vi.indexOf(k));$("#viewer").classList.remove("d");$("#vbody").className="";$("#viewer").classList.add("open");showV()}
+async function showV(){const k=vi[vx],u=await mUrl(k);if(!u)return;const isV=/\.(mp4|mov|3gp|webm)$/i.test(k);$("#vbody").innerHTML=isV?`<video src="${u}" controls autoplay playsinline></video>`:`<img src="${u}" alt="">`;
+ const [cid,ix]=(vm[vx]||":").split(":"),ch=chats.find(x=>x.id===cid),m=ch&&ch.msgs[+ix];let cap=(vx+1)+" / "+vi.length;
+ if(m){const t=ts(ch,m),d=t?new Date(t).toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"}):m.d;cap=`<b>${esc(d)}</b><br><small style="opacity:.8">${esc(m.s||"")} · ${esc(m.t)} · ${vx+1}/${vi.length}</small>`}
+ $("#vcap").innerHTML=cap}
+function openV(k){vi=[...document.querySelectorAll(".mv")].map(e=>e.dataset.v);vm=[...document.querySelectorAll(".mv")].map(e=>e.dataset.mk);vx=Math.max(0,vi.indexOf(k));$("#viewer").classList.remove("d");$("#vbody").className="";$("#viewer").classList.add("open");showV()}
 function closeV(){$("#viewer").classList.remove("open","d");$("#vbody").className="";$("#vbody").innerHTML=""}
 function step(n){const x=vx+n;if(x>=0&&x<vi.length){vx=x;showV()}}
 async function loadPdf(){if(window.pdfjsLib)return;try{const m=await import("./pdf.min.mjs");m.GlobalWorkerOptions.workerSrc="./pdf.worker.min.mjs";window.pdfjsLib=m}catch(e){await new Promise((res,rej)=>{const t=document.createElement("script");t.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";t.onload=()=>{pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";res()};t.onerror=rej;document.head.appendChild(t)})}}
@@ -260,6 +287,18 @@ function startCombine(){const L=chats.filter(c=>c.kind!=="combo");if(L.length<2)
   $("#sheet").classList.remove("open");const name=await inp("Name the combined chat","");if(!name)return;
   const src=ids.map(id=>chats.find(x=>x.id===id));const combo={id:Date.now().toString(36),title:name,kind:"combo",src:ids,msgs:[],senders:[...new Set(src.flatMap(x=>x.senders))],me:src[0].me||"",added:Date.now()};
   await save(combo);await load();showList()}}
+const WALLS=[["butterflies","Butterflies 🦋"],["hearts","Hearts 💗"],["sparkles","Sparkles ✨"],["plain","Plain"]];
+const getWall=()=>localGet("ruhi:wall")||"butterflies";
+function wallSvg(kind,col){const B=(x,y,r,s)=>`<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})"><path d="M0 -1C5 -13 17 -15 17 -6C17 1 8 3 0 0C10 3 15 9 11 14C7 18 2 12 0 4C-2 12 -7 18 -11 14C-15 9 -10 3 0 0C-8 3 -17 1 -17 -6C-17 -15 -5 -13 0 -1Z"/></g>`,H=(x,y,r,s)=>`<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})"><path d="M0 6C-14 -4 -8 -14 0 -6C8 -14 14 -4 0 6Z"/></g>`,S=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 -8L2 -2 8 0 2 2 0 8-2 2-8 0-2-2Z"/></g>`;
+ const sets={butterflies:[B(30,34,-20,1),B(130,22,25,.8),B(96,100,-10,1.1),B(170,150,30,.9),B(40,150,15,.8),H(150,70,10,.9),H(60,92,-12,.7),H(110,176,8,.8),S(80,40,.8),S(180,100,.7),S(20,100,.6),S(120,140,.7)],hearts:[H(30,30,-15,1.2),H(120,25,12,.9),H(80,95,-8,1.4),H(165,90,18,1),H(35,150,10,1),H(135,160,-14,1.2),S(75,40,.8),S(175,150,.8),S(15,95,.7),S(105,70,.6)],sparkles:[S(30,30,1.1),S(110,20,.8),S(170,60,1),S(70,90,1.3),S(140,110,.8),S(25,140,1),S(100,170,1.1),S(175,175,.7),S(55,55,.5),S(150,140,.5)]};
+ return`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><g fill="${col}" fill-opacity=".14">${sets[kind].join("")}</g></svg>`}
+function applyWall(){const k=getWall(),b=document.body;if(!b)return;if(k==="plain"){b.style.backgroundImage="none";return}const col=getComputedStyle(document.documentElement).getPropertyValue("--pt").trim()||"#54656f";b.style.backgroundImage='url("data:image/svg+xml,'+encodeURIComponent(wallSvg(k,col))+'")';b.style.backgroundSize="200px 200px"}
+function setWall(k){try{localStorage.setItem("ruhi:wall",k)}catch(e){}applyWall();showSettings()}
+function showInChat(mk){closeV();if(!mk)return;if(mode!=="chat")openChat(cur.id);$("#q").value="";limit=1e9;renderMsgs(false);
+ setTimeout(()=>{const r=document.querySelector('.row[data-k="'+mk+'"]');if(r){r.scrollIntoView({block:"center"});r.classList.add("hl");setTimeout(()=>r.classList.remove("hl"),2400)}},350)}
+const BF=(i,a,b)=>`<svg viewBox="-30 -26 60 52" width="64" height="54"><defs><linearGradient id="bg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><g class="wings" fill="url(#bg${i})" stroke="rgba(255,255,255,.75)" stroke-width="1"><path d="M0 -2C6 -22 27 -25 27 -11C27 -1 13 3 0 0Z"/><path d="M0 1C12 2 23 8 17 17C12 24 3 16 0 5Z"/><g transform="scale(-1 1)"><path d="M0 -2C6 -22 27 -25 27 -11C27 -1 13 3 0 0Z"/><path d="M0 1C12 2 23 8 17 17C12 24 3 16 0 5Z"/></g></g><ellipse cx="0" cy="2" rx="1.8" ry="9" fill="#fff"/><path d="M0 -6C-3 -12 -6 -13 -7 -15M0 -6C3 -12 6 -13 7 -15" stroke="#fff" fill="none" stroke-width="1"/></svg>`;
+(function(){const sp=$("#splash");if(!sp)return;const P=[["#ffb3d1","#c9a7ff","fly1"],["#c9a7ff","#ffd1e6","fly2"],["#ffd1e6","#b9f6ca","fly3"]];
+ sp.insertAdjacentHTML("afterbegin",P.map((p,i)=>`<div class="bfw ${p[2]}">${BF(i,p[0],p[1])}</div>`).join("")+Array.from({length:12},(_,i)=>`<i class="sp" style="left:${(i*37)%96+2}%;top:${(i*53)%90+4}%;animation-delay:${(i%6)*.35}s">✦</i>`).join(""))})();
 /* events */
 const main=$("#main");
 document.addEventListener("pointerdown",()=>{lp=false},true);
@@ -269,6 +308,7 @@ main.addEventListener("contextmenu",e=>{if(e.target.closest(".row[data-k]"))e.pr
 document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
  if(c("#vclose")||t.id==="vbody"||t.id==="viewer"){closeV();return}
  if(t.matches("#vbody img")){t.classList.toggle("z");return}
+ if(c("#vshow")){showInChat(vm[vx]);return}
  if(c("#vprev")){step(-1);return}if(c("#vnext")){step(1);return}
  if(t.id==="sheet"){t.classList.remove("open");return}
  const kd=c("[data-d]");if(kd){pinKey(kd.dataset.d);return}
@@ -295,7 +335,7 @@ document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
  if(c("#emb")){const m=$("#emo");m.style.display=m.style.display==="grid"?"none":"grid";return}
  if(c("#snd")){send();return}
  if(c("#imp")){$("#file").click();return}
- if(c("#fab")){dlg("Add to RUHI",[["Import chat",()=>$("#file").click()],["Combine chats",startCombine],["Cancel"]]);return}
+ if(c("#fab")){dlg("Add to Ruhi",[["Import chat",()=>$("#file").click()],["Combine chats",startCombine],["Cancel"]]);return}
  if(c("#ren")){const n=await inp("Chat name",cur.title);if(n){cur.title=n;await save(cur);showProfile()}return}
  if(c("#ph")){$("#pfile").click();return}
  if(c("#rot")){if(cur.photo){cur.photo=await sq(cur.photo,1);await save(cur);showProfile()}return}
@@ -306,6 +346,7 @@ document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
  if(c("#rmpin")){if(await ask("Remove the PIN lock?","Remove")){try{localStorage.removeItem(LK)}catch(x){}showSettings()}return}
  if(c("#exp")){exportAll();return}
  const sb=c("[data-sk]");if(sb){setSkin(sb.dataset.sk);return}
+ const wl=c("[data-wl]");if(wl){setWall(wl.dataset.wl);return}
  if(c("#inst")){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null}return}
  if(c("#prot")){try{await navigator.storage.persist()}catch(x){}showSettings();return}
  if(c("#upd")){checkUpdate();return}});
@@ -317,9 +358,18 @@ $("#emo").innerHTML="😀 😁 😂 🤣 😊 😍 😘 😎 🤔 😢 😭 😡
 $("#viewer").addEventListener("touchstart",e=>{tx0=e.touches[0].clientX},{passive:true});
 $("#viewer").addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-tx0;if(Math.abs(d)>70)step(d<0?1:-1)},{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeV()});
-document.addEventListener("visibilitychange",()=>{if(document.hidden&&getPin())lockNow()});
-if(getPin())lockNow();
-load().then(()=>{showList();cleanup();$("#spt").textContent="✓ "+chats.length+(chats.length===1?" chat":" chats")+" backed up";setTimeout(()=>{const s=$("#splash");s.style.opacity=0;setTimeout(()=>s.remove(),500)},2800)});
+let hideAt=0,sst=0;
+document.addEventListener("visibilitychange",()=>{if(document.hidden){hideAt=Date.now();saveState()}else if(getPin()&&hideAt&&Date.now()-hideAt>60000)lockNow()});
+window.addEventListener("pagehide",saveState);window.addEventListener("scroll",()=>{clearTimeout(sst);sst=setTimeout(saveState,400)},{passive:true});
+if(getPin()&&(!resume||gap>60000))lockNow();
+load().then(()=>{let ok=false;
+ if(resume&&ST.mode==="chat"&&chats.find(c=>c.id===ST.id)){openChat(ST.id);ok=true}
+ else if(resume&&ST.mode==="profile"&&chats.find(c=>c.id===ST.id)){cur=chats.find(c=>c.id===ST.id);ptab=ST.tab||"media";showProfile();ok=true}
+ else if(resume&&ST.mode==="settings"){showSettings();ok=true}
+ if(!ok)showList();
+ if(ok&&ST.y)setTimeout(()=>window.scrollTo(0,ST.y),600);
+ cleanup();const sp=$("#splash"),t=$("#spt");
+ if(sp){if(t)t.textContent="✓ "+chats.length+(chats.length===1?" chat":" chats")+" backed up";setTimeout(()=>{sp.style.opacity=0;setTimeout(()=>sp.remove(),500)},3900)}});
 try{navigator.storage.persist()}catch(e){}
 applySkin();
 if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register("sw.js").catch(()=>{});navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!window._rl){window._rl=1;location.reload()}})}
