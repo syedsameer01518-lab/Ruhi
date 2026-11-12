@@ -170,7 +170,7 @@ let chats=[],cur=null,view=[],limit=400,urls={},sel=new Set(),lp=false,lt=0,mode
 const LK="ruhi:pin",DF={};
 const ST=(()=>{try{return JSON.parse(localStorage.getItem("ruhi:state"))}catch(e){return null}})(),gap=ST?Date.now()-ST.t:Infinity,resume=!!ST&&gap<1800000;
 function saveState(){try{localStorage.setItem("ruhi:state",JSON.stringify({t:Date.now(),mode,id:cur&&cur.id,y:window.scrollY,tab:ptab}))}catch(e){}}
-const VERSION=6,SKINS=[["","WhatsApp Green","#25d366"],["rose","Rose Blush","#ec4b8b"],["lavender","Lavender Dream","#9a73f0"],["peach","Peach Sunset","#ff8a5c"],["night","Midnight Rose","#2a1b2e"]];
+const VERSION=7,SKINS=[["","WhatsApp Green","#25d366"],["rose","Rose Blush","#ec4b8b"],["lavender","Lavender Dream","#9a73f0"],["peach","Peach Sunset","#ff8a5c"],["night","Midnight Rose","#2a1b2e"]];
 let deferredPrompt=null;
 const localGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const getSkin=()=>localGet("ruhi:skin")||"";
@@ -180,7 +180,7 @@ const isInstalled=()=>matchMedia("(display-mode: standalone)").matches||matchMed
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e});
 async function checkUpdate(){const m=$("#upm"),say=t=>{if(m)m.textContent=t};try{const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(!r){say("Updates work in the installed app, with internet.");return}say("Checking…");await r.update();if(r.installing||r.waiting)say("Update found. Restarting…");else say("✅ You have the latest version ("+VERSION+").")}catch(e){say("Couldn’t check. Are you online?")}}
 /* storage */
-const DB=()=>new Promise((res,rej)=>{const r=indexedDB.open("chatvault",1);r.onupgradeneeded=()=>{r.result.createObjectStore("chats",{keyPath:"id"});r.result.createObjectStore("media")};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+let dbp=null;const DB=()=>dbp||(dbp=new Promise((res,rej)=>{const r=indexedDB.open("chatvault",1);r.onupgradeneeded=()=>{r.result.createObjectStore("chats",{keyPath:"id"});r.result.createObjectStore("media")};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}).then(d=>{d.onversionchange=()=>{d.close();dbp=null};d.onclose=()=>{dbp=null};return d},e=>{dbp=null;throw e}));
 async function op(store,mode,fn){const db=await DB();return new Promise((res,rej)=>{const t=db.transaction(store,mode);const rq=fn(t.objectStore(store));t.oncomplete=()=>res(rq&&rq.result);t.onerror=()=>rej(t.error)})}
 async function load(){try{chats=(await op("chats","readonly",s=>s.getAll())).sort((a,b)=>b.added-a.added)}catch(e){chats=[]}}
 const save=c=>op("chats","readwrite",s=>s.put(c));
@@ -198,7 +198,7 @@ function parse(text){const out=[];for(const raw of text.split(/\r?\n/)){const li
 function fileOf(b){let m=b.match(/<attached:\s*(.+?)>/);if(m)return m[1].trim();m=b.match(/^(.+?\.\w{2,5})\s\(file attached\)/);return m?m[1].trim():""}
 function dayFirst(c){if(DF[c.id]!==undefined)return DF[c.id];let r=true;for(const m of c.msgs){const p=m.d.split(/[\/.\-]/).map(Number);if(p[0]>12){r=true;break}if(p[1]>12){r=false;break}}return DF[c.id]=r}
 function ts(c,m){if(m.ts)return m.ts;const p=m.d.split(/[\/.\-]/).map(Number),df=dayFirst(c);const t=m.t.match(/(\d{1,2})[:.](\d{2})(?::(\d{2}))?\s?([AaPp])?/)||[];let h=+t[1]||0;if(/p/i.test(t[4]||"")&&h<12)h+=12;if(/a/i.test(t[4]||"")&&h===12)h=0;const y=p[2]<100?2000+p[2]:p[2];return new Date(y,(df?p[1]:p[0])-1,df?p[0]:p[1],h,+t[2]||0,+t[3]||0).getTime()||0}
-function buildView(){const ids=cur.kind==="combo"?[...cur.src,cur.id]:[cur.id],v=[];meSet=new Set();ids.forEach(id=>{const c=chats.find(x=>x.id===id);if(!c)return;if(c.me)meSet.add(c.me);c.msgs.forEach((m,i)=>v.push({m,c:id,i,t:ts(c,m)}))});if(ids.length>1)v.sort((a,b)=>a.t-b.t||a.i-b.i);return v}
+function buildView(){const ids=cur.kind==="combo"?[...cur.src,cur.id]:[cur.id],v=[];meSet=new Set();ids.forEach(id=>{const c=chats.find(x=>x.id===id);if(!c)return;if(c.me)meSet.add(c.me);c.msgs.forEach((m,i)=>v.push({m,c:id,i,t:ids.length>1?ts(c,m):0}))});if(ids.length>1)v.sort((a,b)=>a.t-b.t||a.i-b.i);return v}
 /* import / backup */
 async function importFiles(files){
  let text="",name="",media={};
@@ -226,14 +226,17 @@ function color(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%360;return`h
 const av=(c,z)=>`<div class="av" style="width:${z}px;height:${z}px;font-size:${z*.42}px;${c.photo?`background-image:url(${c.photo});background-size:cover`:""}">${c.photo?"":esc((c.title[0]||"?").toUpperCase())}</div>`;
 const ext=f=>(f.split(".").pop()||"").toLowerCase();
 const isMedia=f=>/^(jpe?g|png|gif|webp|mp4|mov|3gp|webm)$/.test(ext(f)),isAud=f=>/^(opus|mp3|m4a|ogg|aac|wav)$/.test(ext(f));
-function hydrate(){document.querySelectorAll("[data-m]").forEach(async el=>{const k=el.dataset.m;try{await mUrl(k);if(urls[k])el.src=urls[k]+(el.dataset.t==="video"?"#t=0.1":"");else el.outerHTML='<span class="file">📎 '+esc(k.split("/").pop())+" (not imported)</span>"}catch(e){}})}
-const mvHtml=(k,tag,mk)=>`<span class="mv ${tag}" data-v="${esc(k)}" data-mk="${mk||""}"><${tag} data-m="${esc(k)}" data-t="${tag}" ${tag==="img"?'alt=""':'playsinline preload="metadata" muted'}></${tag}></span>`;
+let io=null;
+async function load1(el){const k=el.dataset.m;try{await mUrl(k);if(urls[k])el.src=urls[k]+(el.dataset.t==="video"?"#t=0.1":"");else el.outerHTML='<span class="file">📎 '+esc(k.split("/").pop())+" (not imported)</span>"}catch(e){}}
+function hydrate(){const els=[...document.querySelectorAll("[data-m]")];if(io){io.disconnect();io=null}if(!("IntersectionObserver" in window)){els.forEach(load1);return}
+ io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);load1(e.target)}}),{rootMargin:"600px 0px"});els.forEach(e=>io.observe(e))}
+const mvHtml=(k,tag,mk)=>`<span class="mv ${tag}" data-v="${esc(k)}" data-mk="${mk||""}"><${tag} data-m="${esc(k)}" data-t="${tag}" ${tag==="img"?'alt="" decoding="async"':'playsinline preload="metadata" muted'}></${tag}></span>`;
 const fico=f=>ext(f)==="pdf"?"📕":/^(xlsx?|csv)$/.test(ext(f))?"📊":/^(docx?|txt)$/.test(ext(f))?"📝":"📎";
 /* screens */
 function chrome(m){mode=m;saveState();sel.clear();$("#bar").style.display="none";$("#emo").style.display="none";$("#dock").style.display=m==="chat"?"block":"none";$("#fab").style.display=m==="list"?"block":"none";window.scrollTo(0,0)}
 function showList(){cur=null;chrome("list");$("#hd").innerHTML='<h1><span class="rlogo">Ruhi</span> 🦋</h1><button id="rfsh" aria-label="Refresh">🔄</button><button id="gear" aria-label="Settings">⚙️</button>';
  $("#main").innerHTML=chats.length?chats.map(c=>{const l=c.msgs[c.msgs.length-1];return`<div class="it" data-o="${c.id}">${av(c,46)}<div class="t"><b>${esc(c.title)}</b><small>${c.kind==="combo"?"🔗 Combined · ":""}${c.kind==="combo"?c.src.reduce((n,id)=>n+((chats.find(x=>x.id===id)||{msgs:[]}).msgs.length),0)+c.msgs.length:c.msgs.length} messages${l?" · "+esc(l.d):""}</small></div><button class="x" data-x="${c.id}" aria-label="Delete">🗑</button></div>`}).join(""):'<div class="empty"><p style="font-size:44px;margin:0">💬</p><p>Tap + to import a WhatsApp chat export and read it here, looking just like WhatsApp.</p></div>';if(chats.length){const lb=+localGet("ruhi:lb")||0,days=lb?Math.floor((Date.now()-lb)/864e5):999;if(days>30)$("#main").insertAdjacentHTML("afterbegin",`<div class="sec" style="margin:0;display:flex;gap:10px;align-items:center"><div style="flex:1;font-size:13px">💾 ${lb?"Last backup was "+days+" days ago.":"No backup yet."} Keep your chats safe.</div><button class="btn sm" id="bk">Back up</button></div>`)}}
-function openChat(id){cur=chats.find(c=>c.id===id);if(!cur)return;limit=400;chrome("chat");$("#q").value="";renderMsgs(true)}
+function openChat(id){cur=chats.find(c=>c.id===id);if(!cur)return;limit=80;chrome("chat");$("#q").value="";renderMsgs(true)}
 function hdChat(){if(sel.size){$("#hd").innerHTML=`<button id="sx">✕</button><h1>${sel.size} selected</h1><button id="srx" aria-label="React">😊</button><button id="skp" aria-label="Memory">💗</button><button id="sdel" aria-label="Delete">🗑</button>`;return}
  $("#hd").innerHTML=`<button id="back">←</button><div data-pf="1" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer">${av(cur,36)}<h1>${esc(cur.title)}${cur.kind==="combo"?'<small style="display:block;font-weight:400;font-size:12px;opacity:.85">'+cur.src.map(id=>esc((chats.find(x=>x.id===id)||{title:"?"}).title)).join(" + ")+'</small>':""}</h1></div><button id="srch" aria-label="Search">🔍</button>`}
 function renderMsgs(bottom){view=buildView();hdChat();const q=$("#q").value.toLowerCase();const vs=q?view.filter(x=>(x.m.b+x.m.s).toLowerCase().includes(q)):view;
@@ -301,7 +304,7 @@ function drawLock(){const L=getLock(),h=$("#lk"),m=$("#lkmsg");if(!L)return;buf=
  else{m.textContent="Draw your pattern";mountPattern(h,async s=>{if(await sha("pt:"+s)===L.h)unlock();else{h.classList.add("shake");setTimeout(()=>h.classList.remove("shake"),400)}})}}
 async function pinKey(d){const L=getLock();if(!L||L.t!=="pin")return;if(d==="del")buf=buf.slice(0,-1);else buf+=d;dots();if(buf.length===L.n){if(await sha(buf)===L.h)unlock();else{$("#dots").classList.add("shake");setTimeout(()=>$("#dots").classList.remove("shake"),400)}buf="";setTimeout(dots,150)}}
 async function checkPass(){const L=getLock(),i=$("#lpw");if(!L||!i)return;if(await sha("pw:"+i.value.trim())===L.h)unlock();else{i.value="";i.classList.add("shake");setTimeout(()=>i.classList.remove("shake"),400)}}
-async function forgot(){if(!await ask("Forgot your lock? The only way in is to erase everything saved in Ruhi on this phone. Your backup files and WhatsApp exports are not affected.","Erase everything"))return;try{[LKJ,LK,LK+"n","ruhi:state","ruhi:lb"].forEach(k=>localStorage.removeItem(k))}catch(e){}await new Promise(r=>{const q=indexedDB.deleteDatabase("chatvault");q.onsuccess=q.onerror=q.onblocked=()=>r()});location.reload()}
+async function forgot(){if(!await ask("Forgot your lock? The only way in is to erase everything saved in Ruhi on this phone. Your backup files and WhatsApp exports are not affected.","Erase everything"))return;try{[LKJ,LK,LK+"n","ruhi:state","ruhi:lb"].forEach(k=>localStorage.removeItem(k))}catch(e){}try{(await DB()).close();dbp=null}catch(e){}await new Promise(r=>{const q=indexedDB.deleteDatabase("chatvault");q.onsuccess=q.onerror=q.onblocked=()=>r()});location.reload()}
 async function showSettings(){chrome("settings");$("#hd").innerHTML='<button id="back">←</button><h1>Settings</h1>';const pin=getPin();
  let sz={},tot=0,est={usage:0,quota:0};try{const ks=await op("media","readonly",s=>s.getAllKeys()),bs=await op("media","readonly",s=>s.getAll());ks.forEach((k,i)=>{const id=String(k).split("/")[0],n=bs[i]?bs[i].size:0;sz[id]=(sz[id]||0)+n;tot+=n});est=await navigator.storage.estimate()}catch(e){}
  const g=n=>n>=1e9?(n/1e9).toFixed(2)+" GB":(n/1e6).toFixed(1)+" MB";let per=false;try{per=await navigator.storage.persisted()}catch(e){}const inst=isInstalled(),lb=localGet("ruhi:lb"),sk=getSkin();
@@ -347,7 +350,7 @@ function wallSvg(kind,col){const B=(x,y,r,s)=>`<g transform="translate(${x} ${y}
  return`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><g fill="${col}" fill-opacity=".14">${sets[kind].join("")}</g></svg>`}
 function applyWall(){const k=getWall(),b=document.body;if(!b)return;if(k==="plain"){b.style.backgroundImage="none";return}const col=getComputedStyle(document.documentElement).getPropertyValue("--pt").trim()||"#54656f";b.style.backgroundImage='url("data:image/svg+xml,'+encodeURIComponent(wallSvg(k,col))+'")';b.style.backgroundSize="200px 200px"}
 function setWall(k){try{localStorage.setItem("ruhi:wall",k)}catch(e){}applyWall();showSettings()}
-function showInChat(mk){closeV();if(!mk)return;if(mode!=="chat")openChat(cur.id);$("#q").value="";limit=1e9;renderMsgs(false);
+function showInChat(mk){closeV();if(!mk)return;if(mode!=="chat")openChat(cur.id);$("#q").value="";view=buildView();const ix=view.findIndex(x=>x.c+":"+x.i===mk);limit=ix<0?80:view.length-ix+30;renderMsgs(false);
  setTimeout(()=>{const r=document.querySelector('.row[data-k="'+mk+'"]');if(r){r.scrollIntoView({block:"center"});r.classList.add("hl");setTimeout(()=>r.classList.remove("hl"),2400)}},350)}
 const BF=(i,a,b)=>`<svg viewBox="-30 -26 60 52" width="64" height="54"><defs><linearGradient id="bg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><g class="wings" fill="url(#bg${i})" stroke="rgba(255,255,255,.75)" stroke-width="1"><path d="M0 -2C6 -22 27 -25 27 -11C27 -1 13 3 0 0Z"/><path d="M0 1C12 2 23 8 17 17C12 24 3 16 0 5Z"/><g transform="scale(-1 1)"><path d="M0 -2C6 -22 27 -25 27 -11C27 -1 13 3 0 0Z"/><path d="M0 1C12 2 23 8 17 17C12 24 3 16 0 5Z"/></g></g><ellipse cx="0" cy="2" rx="1.8" ry="9" fill="#fff"/><path d="M0 -6C-3 -12 -6 -13 -7 -15M0 -6C3 -12 6 -13 7 -15" stroke="#fff" fill="none" stroke-width="1"/></svg>`;
 (function(){const sp=$("#splash");if(!sp)return;const w=$("#rwrap");$("#bfs").innerHTML=BF(9,"#c8ecff","#3fb0f5");
@@ -431,7 +434,7 @@ document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
  if(c("#srch")){const b=$("#bar");b.style.display=b.style.display==="block"?"none":"block";if(b.style.display==="block")$("#q").focus();return}
  if(c("#sx")){sel.clear();renderMsgs(false);return}
  if(c("#skp")){keypoint();return}if(c("#sdel")){delSel();return}
- if(t.id==="earlier"){limit+=400;renderMsgs(false);return}
+ if(t.id==="earlier"){const h0=document.body.scrollHeight,y0=window.scrollY;limit+=100;renderMsgs(false);window.scrollTo(0,y0+document.body.scrollHeight-h0);return}
  if(c("#gear")){showSettings();return}
  if(c("#emb")){const m=$("#emo");m.style.display=m.style.display==="grid"?"none":"grid";return}
  if(c("#snd")){send();return}
@@ -476,7 +479,7 @@ load().then(()=>{let ok=false;
  else if(resume&&ST.mode==="settings"){showSettings();ok=true}
  if(!ok)showList();
  if(ok&&ST.y)setTimeout(()=>window.scrollTo(0,ST.y),600);
- cleanup();const sp=$("#splash"),t=$("#spt");
+ setTimeout(cleanup,8000);const sp=$("#splash"),t=$("#spt");
  if(sp){if(t)t.textContent="✓ "+chats.length+(chats.length===1?" chat":" chats")+" backed up";setTimeout(()=>{sp.style.opacity=0;setTimeout(()=>sp.remove(),500)},7500)}});
 try{navigator.storage.persist()}catch(e){}
 applySkin();
