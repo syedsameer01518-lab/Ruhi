@@ -56,7 +56,7 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 @keyframes flap{from{transform:scaleX(1)}to{transform:scaleX(.28)}}
 .sp{position:absolute;color:#fff;font-style:normal;font-size:16px;opacity:0;animation:tw 2.2s ease-in-out infinite;pointer-events:none}
 @keyframes tw{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:.9;transform:scale(1)}}
-.row{touch-action:pan-y}.b{position:relative}
+.row{touch-action:pan-y;position:relative;overflow-x:clip}.b img,.b video,.b a{-webkit-user-drag:none;user-select:none}.swa{position:absolute;left:10px;top:50%;transform:translateY(-50%);display:flex;gap:10px;z-index:1}.swa button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:var(--tx);font:inherit;font-size:11px;cursor:pointer}.swa button span{width:44px;height:44px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:22px;box-shadow:0 1px 4px rgba(0,0,0,.25)}.b{position:relative}
 .rx{position:absolute;bottom:-13px;left:8px;background:var(--card);border-radius:12px;padding:0 6px;font-size:15px;box-shadow:0 1px 3px rgba(0,0,0,.3);line-height:1.4}.o .rx{left:auto;right:8px}.row.hasrx{margin-bottom:14px}
 #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:rgba(0,0,0,.82);color:#fff;padding:9px 16px;border-radius:20px;z-index:60;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}#toast.on{opacity:1}
 #rfsh.spin{animation:spin1 .9s linear}@keyframes spin1{to{transform:rotate(360deg)}}
@@ -80,6 +80,12 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 #vshow{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:18px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}#viewer.d #vshow{display:none}
 .gh{grid-column:1/-1;padding:10px 14px 6px;font-weight:600;background:var(--card)}
 .row.hl .b{animation:hl 2.2s}@keyframes hl{0%,70%{box-shadow:0 0 0 4px var(--ac),0 0 18px var(--ac)}100%{box-shadow:0 1px 1px rgba(0,0,0,.13)}}
+#sheet{z-index:60}#sheet:has(#mem){align-items:flex-start;padding-top:10vh}
+.lkf{position:absolute;bottom:24px;background:none;border:0;color:rgba(255,255,255,.7);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
+.lpw{width:260px;padding:12px 14px;border-radius:24px;border:0;font:inherit;text-align:center;font-size:18px}
+.pat{position:relative;width:240px;height:240px;margin:0 auto;touch-action:none;color:#fff;user-select:none;-webkit-user-select:none}
+.pd{position:absolute;width:28px;height:28px;border-radius:50%;border:2px solid currentColor;opacity:.75}.pd.on{background:currentColor;opacity:1}
+.pl{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
@@ -101,7 +107,7 @@ header button{background:none;border:0;color:#fff;font-size:20px;cursor:pointer;
 .row{display:flex;margin:2px 0;padding:1px 0}.row.o{justify-content:flex-end}.row.s{background:var(--sel)}
 .b{max-width:82%;padding:6px 8px 4px;border-radius:9px;background:var(--in);box-shadow:0 1px 1px rgba(0,0,0,.13);word-break:break-word;white-space:pre-wrap;min-width:64px;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .o .b{background:var(--out)}.nm{font-size:12.8px;font-weight:600;display:block}
-.tm{float:right;margin:6px 0 0 10px;font-size:11px;color:var(--mut)}.star{display:block;font-size:11px;color:#c79100;font-weight:600}
+.tm{float:right;margin:6px 0 0 10px;font-size:11px;color:var(--mut)}.star{display:block;font-size:12px;color:var(--ac);font-weight:600}
 .b img,.b video{max-width:100%;max-height:320px;border-radius:7px;display:block;margin-bottom:3px}.b audio{width:230px;max-width:100%}
 .file{display:inline-block;background:rgba(0,0,0,.08);padding:8px 10px;border-radius:8px;font-size:13px;margin-bottom:3px;cursor:pointer}
 a{color:#53bdeb}
@@ -146,7 +152,7 @@ a{color:#53bdeb}
 <body>
 <div id="splash"><div id="rwrap"><div class="rword" id="rw"><span>R</span><span>u</span><span>h</span><span id="li">i</span></div><div class="skyb" id="bfs"></div></div><div class="gift">GIFT FOR LOVED ONES</div><div class="ok" id="spt">✓ Backed up</div><div class="skiph">tap to skip</div></div>
 <script>try{var N=Date.now(),k=+localStorage.getItem("ruhi:skip")||0;if(N-k<15000||(N>=new Date(2027,2,27,19,20,0).getTime()&&N<new Date(2027,2,27,19,30,0).getTime()))document.getElementById("splash").remove()}catch(e){}</script>
-<div id="lock"><div style="font-size:30px;font-weight:800"><span class="rlogo">Ruhi</span> 🦋</div><div style="opacity:.85;margin-top:6px">Enter your PIN</div><div id="dots"></div><div id="pad"></div></div>
+<div id="lock"><div style="font-size:30px;font-weight:800"><span class="rlogo">Ruhi</span> 🦋</div><div id="lkmsg" style="opacity:.85;margin-top:6px"></div><div id="lk" style="margin-top:18px"></div><button id="lkf" class="lkf">Forgot lock?</button></div>
 <header id="hd"></header>
 <div id="bar"><input id="q" type="search" placeholder="Search in this chat"></div>
 <div class="main" id="main"></div>
@@ -164,7 +170,7 @@ let chats=[],cur=null,view=[],limit=400,urls={},sel=new Set(),lp=false,lt=0,mode
 const LK="ruhi:pin",DF={};
 const ST=(()=>{try{return JSON.parse(localStorage.getItem("ruhi:state"))}catch(e){return null}})(),gap=ST?Date.now()-ST.t:Infinity,resume=!!ST&&gap<1800000;
 function saveState(){try{localStorage.setItem("ruhi:state",JSON.stringify({t:Date.now(),mode,id:cur&&cur.id,y:window.scrollY,tab:ptab}))}catch(e){}}
-const VERSION=4,SKINS=[["","WhatsApp Green","#25d366"],["rose","Rose Blush","#ec4b8b"],["lavender","Lavender Dream","#9a73f0"],["peach","Peach Sunset","#ff8a5c"],["night","Midnight Rose","#2a1b2e"]];
+const VERSION=6,SKINS=[["","WhatsApp Green","#25d366"],["rose","Rose Blush","#ec4b8b"],["lavender","Lavender Dream","#9a73f0"],["peach","Peach Sunset","#ff8a5c"],["night","Midnight Rose","#2a1b2e"]];
 let deferredPrompt=null;
 const localGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const getSkin=()=>localGet("ruhi:skin")||"";
@@ -183,7 +189,7 @@ async function mUrl(k){if(!urls[k]){const b=await op("media","readonly",s=>s.get
 /* dialogs */
 function dlg(msg,btns){return new Promise(r=>{const p=$("#panel");p.innerHTML=`<p style="margin:0 0 14px;word-break:break-word">${esc(msg)}</p><div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"></div>`;const row=p.lastChild;btns.forEach(([l,fn,cls])=>{const b=document.createElement("button");b.className="opt "+(cls||"");b.style.cssText="display:inline-block;width:auto";b.textContent=l;b.onclick=()=>{$("#sheet").classList.remove("open");if(fn)fn();r(l)};row.appendChild(b)});$("#sheet").classList.add("open")})}
 const ask=(msg,ok)=>dlg(msg,ok?[["Cancel"],[ok,null,"red"]]:[["OK"]]).then(l=>l===ok);
-function inp(title,val,num){return new Promise(r=>{const p=$("#panel");p.innerHTML=`<h3 style="margin:0 0 8px">${esc(title)}</h3><input id="pin1" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit"><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="opt" style="display:inline-block;width:auto" id="c1">Cancel</button><button class="opt" style="display:inline-block;width:auto;background:var(--ac);color:#fff;border:0" id="o1">Save</button></div>`;const i=$("#pin1");i.value=val||"";if(num){i.type="password";i.inputMode="numeric"}$("#sheet").classList.add("open");i.focus();$("#c1").onclick=()=>{$("#sheet").classList.remove("open");r(null)};$("#o1").onclick=()=>{$("#sheet").classList.remove("open");r(i.value.trim())}})}
+function inp(title,val,num){return new Promise(r=>{const p=$("#panel");p.innerHTML=`<h3 style="margin:0 0 8px">${esc(title)}</h3><input id="pin1" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit"><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="opt" style="display:inline-block;width:auto" id="c1">Cancel</button><button class="opt" style="display:inline-block;width:auto;background:var(--ac);color:#fff;border:0" id="o1">Save</button></div>`;const i=$("#pin1");i.value=val||"";if(num){i.type="password";if(num===1)i.inputMode="numeric"}$("#sheet").classList.add("open");i.focus();$("#c1").onclick=()=>{$("#sheet").classList.remove("open");r(null)};$("#o1").onclick=()=>{$("#sheet").classList.remove("open");r(i.value.trim())}})}
 function openLink(u){dlg(u,[["Close"],["Copy",()=>{try{navigator.clipboard.writeText(u)}catch(e){}}],["Open",()=>{const w=window.open(u,"_blank");if(w)w.opener=null;else dlg("The link couldn’t open here. Use Copy and paste it in your browser.",[["OK"]])},"red"]])}
 /* parsing */
 const RE=/^\[?(\d{1,4}[\/.\-]\d{1,2}[\/.\-]\d{1,4}),?\s+(\d{1,2}[:.]\d{2}(?::\d{2})?(?:\s?[AaPp]\.?[Mm]\.?)?)\]?\s*(?:[-–]\s*)?([\s\S]*)$/;
@@ -228,7 +234,7 @@ function chrome(m){mode=m;saveState();sel.clear();$("#bar").style.display="none"
 function showList(){cur=null;chrome("list");$("#hd").innerHTML='<h1><span class="rlogo">Ruhi</span> 🦋</h1><button id="rfsh" aria-label="Refresh">🔄</button><button id="gear" aria-label="Settings">⚙️</button>';
  $("#main").innerHTML=chats.length?chats.map(c=>{const l=c.msgs[c.msgs.length-1];return`<div class="it" data-o="${c.id}">${av(c,46)}<div class="t"><b>${esc(c.title)}</b><small>${c.kind==="combo"?"🔗 Combined · ":""}${c.kind==="combo"?c.src.reduce((n,id)=>n+((chats.find(x=>x.id===id)||{msgs:[]}).msgs.length),0)+c.msgs.length:c.msgs.length} messages${l?" · "+esc(l.d):""}</small></div><button class="x" data-x="${c.id}" aria-label="Delete">🗑</button></div>`}).join(""):'<div class="empty"><p style="font-size:44px;margin:0">💬</p><p>Tap + to import a WhatsApp chat export and read it here, looking just like WhatsApp.</p></div>';if(chats.length){const lb=+localGet("ruhi:lb")||0,days=lb?Math.floor((Date.now()-lb)/864e5):999;if(days>30)$("#main").insertAdjacentHTML("afterbegin",`<div class="sec" style="margin:0;display:flex;gap:10px;align-items:center"><div style="flex:1;font-size:13px">💾 ${lb?"Last backup was "+days+" days ago.":"No backup yet."} Keep your chats safe.</div><button class="btn sm" id="bk">Back up</button></div>`)}}
 function openChat(id){cur=chats.find(c=>c.id===id);if(!cur)return;limit=400;chrome("chat");$("#q").value="";renderMsgs(true)}
-function hdChat(){if(sel.size){$("#hd").innerHTML=`<button id="sx">✕</button><h1>${sel.size} selected</h1><button id="srx" aria-label="React">😊</button><button id="skp" aria-label="Key point">⭐</button><button id="sdel" aria-label="Delete">🗑</button>`;return}
+function hdChat(){if(sel.size){$("#hd").innerHTML=`<button id="sx">✕</button><h1>${sel.size} selected</h1><button id="srx" aria-label="React">😊</button><button id="skp" aria-label="Memory">💗</button><button id="sdel" aria-label="Delete">🗑</button>`;return}
  $("#hd").innerHTML=`<button id="back">←</button><div data-pf="1" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer">${av(cur,36)}<h1>${esc(cur.title)}${cur.kind==="combo"?'<small style="display:block;font-weight:400;font-size:12px;opacity:.85">'+cur.src.map(id=>esc((chats.find(x=>x.id===id)||{title:"?"}).title)).join(" + ")+'</small>':""}</h1></div><button id="srch" aria-label="Search">🔍</button>`}
 function renderMsgs(bottom){view=buildView();hdChat();const q=$("#q").value.toLowerCase();const vs=q?view.filter(x=>(x.m.b+x.m.s).toLowerCase().includes(q)):view;
  const start=Math.max(0,vs.length-limit),group=new Set(view.map(x=>x.m.s).filter(Boolean)).size>2;let h="",last="";
@@ -240,11 +246,11 @@ function renderMsgs(bottom){view=buildView();hdChat();const q=$("#q").value.toLo
   if(f){const k=x.c+"/"+f;body+=isMedia(f)?mvHtml(k,/^(mp4|mov|3gp|webm)$/.test(ext(f))?"video":"img",key):isAud(f)?`<audio data-m="${esc(k)}" data-t="audio" controls></audio>`:`<span class="file" data-f="${esc(k)}">${fico(f)} ${esc(f)}</span><br>`;
    const rest=m.b.replace(/<attached:[^>]*>/,"").replace(f+" (file attached)","").trim();if(rest)body+=fmt(rest)}
   else if(/^<Media omitted>$/i.test(m.b.trim()))body='<i style="color:var(--mut)">📷 Media not included in export</i>';else body=fmt(m.b);
-  h+=`<div class="row ${out?"o":""} ${sel.has(key)?"s":""} ${m.re?"hasrx":""}" data-k="${key}"><div class="b">${combo&&x.c!==cur.id?`<span class="nm" style="color:${color(ct(x.c))}">${esc(ct(x.c))}</span>`:""}${group&&!out&&!combo?`<span class="nm" style="color:${color(m.s)}">${esc(m.s)}</span>`:""}${m.k?`<span class="star">⭐ ${esc(m.k)}</span>`:""}${body}<span class="tm">${esc(m.t)}</span>${m.re?`<span class="rx">${m.re}</span>`:""}</div></div>`}
+  h+=`<div class="row ${out?"o":""} ${sel.has(key)?"s":""} ${m.re?"hasrx":""}" data-k="${key}"><div class="b">${combo&&x.c!==cur.id?`<span class="nm" style="color:${color(ct(x.c))}">${esc(ct(x.c))}</span>`:""}${group&&!out&&!combo?`<span class="nm" style="color:${color(m.s)}">${esc(m.s)}</span>`:""}${m.k?`<span class="star">💗 ${esc(m.k)}</span>`:""}${body}<span class="tm">${esc(m.t)}</span>${m.re?`<span class="rx">${m.re}</span>`:""}</div></div>`}
  $("#main").innerHTML='<div id="msgs">'+(h||'<div class="empty">No messages found.</div>')+"</div>";hydrate();if(bottom)window.scrollTo(0,document.body.scrollHeight)}
 function toggleSel(k){sel.has(k)?sel.delete(k):sel.add(k);hdChat();const r=document.querySelector('.row[data-k="'+k+'"]');if(r)r.classList.toggle("s",sel.has(k))}
 const selItems=()=>[...sel].map(k=>{const [c,i]=k.split(":");return [chats.find(x=>x.id===c),+i]}).filter(x=>x[0]);
-async function keypoint(){const t=await inp("Tag this key point (memory, important…)","");if(t===null)return;const s=new Set();for(const [c,i] of selItems()){c.msgs[i].k=t||"Key point";s.add(c)}for(const c of s)await save(c);sel.clear();renderMsgs(false)}
+async function keypoint(){const t=await inp("Memory note for these messages","");if(t===null)return;const s=new Set();for(const [c,i] of selItems()){c.msgs[i].k=t||"Memory";s.add(c)}for(const c of s)await save(c);sel.clear();renderMsgs(false)}
 async function delSel(){if(!await ask("Delete "+sel.size+" selected message(s)? This can’t be undone.","Delete"))return;const by={};for(const [c,i] of selItems())(by[c.id]=by[c.id]||{c,ix:[]}).ix.push(i);for(const id in by){const {c,ix}=by[id];ix.sort((a,b)=>b-a).forEach(i=>c.msgs.splice(i,1));await save(c)}sel.clear();renderMsgs(false)}
 async function send(){const v=$("#ti").value.trim();if(!v||!cur)return;const n=new Date();cur.msgs.push({d:n.toLocaleDateString(),t:n.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),s:cur.me||"Me",b:v,ts:n.getTime()});$("#ti").value="";await save(cur);renderMsgs(true)}
 /* profile */
@@ -254,29 +260,52 @@ function showProfile(){chrome("profile");view=buildView();$("#hd").innerHTML='<b
  const media=files.filter(o=>isMedia(o.f)),docs=files.filter(o=>!isMedia(o.f)&&!isAud(o.f));
  const links=[];view.forEach(x=>(x.m.b.match(/https?:\/\/[^\s<]+/g)||[]).forEach(u=>links.push({u,x})));links.reverse();
  const kps=view.filter(x=>x.m.k).reverse().map(x=>({x})),pays=view.filter(x=>PK.test(x.m.b)&&PAY.test(x.m.b)).reverse().map(x=>({x}));
- const T=[["media","Media",media.length],["docs","Docs",docs.length],["links","Links",links.length],["kp","Key points",kps.length],["pay","Payments",pays.length]];
+ const T=[["media","Media",media.length],["docs","Docs",docs.length],["links","Links",links.length],["kp","Memories",kps.length],["pay","Payments",pays.length]];
  const meta=x=>esc(x.m.s||"")+" · "+esc(x.m.d);let c="";
  if(ptab==="media"){let lm="";c=media.length?'<div class="grid">'+media.map(o=>{const ch=chats.find(z=>z.id===o.x.c),t=ts(ch,o.x.m),lab=t?new Date(t).toLocaleDateString(undefined,{month:"long",year:"numeric"}):o.x.m.d,hd=lab!==lm?(lm=lab,`<div class="gh">${esc(lab)}</div>`):"";return hd+mvHtml(o.x.c+"/"+o.f,/^(mp4|mov|3gp|webm)$/.test(ext(o.f))?"video":"img",o.x.c+":"+o.x.i)}).join("")+"</div>":'<div class="empty">No photos or videos</div>'}
  if(ptab==="docs")c=docs.map(o=>`<div class="li" data-f="${esc(o.x.c+"/"+o.f)}"><span style="font-size:26px">${fico(o.f)}</span><div>${esc(o.f)}<small>${meta(o.x)}</small></div></div>`).join("")||'<div class="empty">No documents</div>';
  if(ptab==="links")c=links.map(o=>`<div class="li" data-lu="${esc(o.u)}"><span style="font-size:26px">🔗</span><div>${esc(o.u)}<small>${meta(o.x)}</small></div></div>`).join("")||'<div class="empty">No links</div>';
- if(ptab==="kp")c=kps.map(o=>`<div class="li"><span style="font-size:22px">⭐</span><div><b>${esc(o.x.m.k)}</b><br>${esc(o.x.m.b.slice(0,300))}<small>${meta(o.x)}</small></div><button class="x" data-rk="${o.x.c}:${o.x.i}" style="background:none;border:0;color:var(--mut);font-size:18px">✕</button></div>`).join("")||'<div class="empty">Long-press a message in the chat, then tap ⭐ to save a key point.</div>';
+ if(ptab==="kp")c=kps.map(o=>`<div class="li"><span style="font-size:22px">💗</span><div><b>${esc(o.x.m.k)}</b><br>${esc(o.x.m.b.slice(0,300))}<small>${meta(o.x)}</small></div><button class="x" data-rk="${o.x.c}:${o.x.i}" style="background:none;border:0;color:var(--mut);font-size:18px">✕</button></div>`).join("")||'<div class="empty">Swipe a message right and tap 💗 Memories to save a memory.</div>';
  if(ptab==="pay")c=pays.map(o=>`<div class="li"><span style="font-size:24px">💳</span><div><b>${esc(o.x.m.b.match(PAY)[0])}</b><br>${esc(o.x.m.b.slice(0,200))}<small>${meta(o.x)}</small></div></div>`).join("")||'<div class="empty">No payment messages found (looks for amounts like ₹500 or $20 with words like paid, sent, UPI).</div>';
  const others=chats.filter(x=>x.id!==cur.id);
  $("#main").innerHTML=`<div class="pf">${av(cur,96)}<h2>${esc(cur.title)}</h2><small>${view.length} messages</small><div class="r2"><button class="btn sm" id="ren">✏️ Rename</button><button class="btn sm" id="ph">📷 Photo</button><button class="btn sm g" id="rot">↻ Rotate</button><button class="btn sm g" id="rph">Remove photo</button></div><div class="r2"><button class="btn sm g" id="who2">👤 I am: ${esc(cur.me||"?")}</button><button class="btn sm red" id="delc">🗑 Delete chat</button></div></div>
  ${cur.kind==="combo"?`<div class="sec"><h4>COMBINED FROM</h4>${cur.src.map(id=>esc((chats.find(x=>x.id===id)||{title:"(removed chat)"}).title)).join("<br>")}</div>`:""}
  <div class="tabs">${T.map(([k,l,n])=>`<button data-pt="${k}" class="${ptab===k?"on":""}">${l} (${n})</button>`).join("")}</div>${c}`;hydrate()}
 /* settings, lock, storage */
-const getPin=()=>{try{return localStorage.getItem(LK)}catch(e){return null}};
+const LKJ="ruhi:lock";
+function getLock(){try{const j=localStorage.getItem(LKJ);if(j)return JSON.parse(j);const h=localStorage.getItem(LK);if(h)return{t:"pin",h,n:+(localStorage.getItem(LK+"n")||4)}}catch(e){}return null}
+const getPin=()=>{const L=getLock();return L&&L.h};
+function saveLock(L){try{localStorage.setItem(LKJ,JSON.stringify(L));localStorage.removeItem(LK);localStorage.removeItem(LK+"n")}catch(e){}}
+function clearLock(){try{[LKJ,LK,LK+"n"].forEach(k=>localStorage.removeItem(k))}catch(e){}}
 async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("ruhi"+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
-async function setPin(){const a=await inp("New PIN (4 to 6 digits)","",1);if(a===null)return;if(!/^\d{4,6}$/.test(a)){await dlg("The PIN must be 4 to 6 digits.",[["OK"]]);return}const b=await inp("Type the PIN again","",1);if(b!==a){await dlg("The PINs didn’t match.",[["OK"]]);return}try{localStorage.setItem(LK,await sha(a));localStorage.setItem(LK+"n",a.length)}catch(e){}showSettings()}
-function lockNow(){buf="";$("#lock").classList.add("on");dots()}
-function dots(){const n=+((()=>{try{return localStorage.getItem(LK+"n")}catch(e){}})()||4);$("#dots").innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<buf.length?"f":""}"></i>`).join("")}
-async function pinKey(d){if(d==="del")buf=buf.slice(0,-1);else buf+=d;dots();const n=$("#dots").children.length;if(buf.length===n){if(await sha(buf)===getPin())$("#lock").classList.remove("on");else{$("#dots").classList.add("shake");setTimeout(()=>$("#dots").classList.remove("shake"),400)}buf="";setTimeout(dots,150)}}
-$("#pad").innerHTML=["1","2","3","4","5","6","7","8","9","","0","del"].map(d=>d===""?"<span></span>":`<button data-d="${d}">${d==="del"?"⌫":d}</button>`).join("");
+function setLock(){dlg("Choose a lock type",[["PIN",setPin],["Password",setPass],["Pattern",setPat],["Cancel"]])}
+async function setPin(){const a=await inp("New PIN (4 to 6 digits)","",1);if(a===null)return;if(!/^\d{4,6}$/.test(a)){await dlg("The PIN must be 4 to 6 digits.",[["OK"]]);return}const b=await inp("Type the PIN again","",1);if(b!==a){await dlg("The PINs didn’t match.",[["OK"]]);return}saveLock({t:"pin",h:await sha(a),n:a.length});showSettings()}
+async function setPass(){const a=await inp("Create a password (letters, numbers or symbols, at least 4)","",2);if(a===null)return;if(a.length<4){await dlg("Use at least 4 characters.",[["OK"]]);return}const b=await inp("Type the password again","",2);if(b!==a){await dlg("The passwords didn’t match.",[["OK"]]);return}saveLock({t:"pass",h:await sha("pw:"+a)});showSettings()}
+function setPat(){let first=null;const p=$("#panel");
+ p.innerHTML='<h3 style="margin:0 0 4px">Pattern lock</h3><p id="pm" style="margin:0 0 10px;color:var(--mut);font-size:14px">Connect at least 4 dots.</p><div id="ph0" style="color:var(--tx)"></div><div style="text-align:right;margin-top:10px"><button class="opt" style="display:inline-block;width:auto" id="pc">Cancel</button></div>';$("#sheet").classList.add("open");$("#pc").onclick=()=>$("#sheet").classList.remove("open");
+ mountPattern($("#ph0"),async s=>{const m=$("#pm");if(s.length<4){m.textContent="Connect at least 4 dots. Try again.";return}if(!first){first=s;m.textContent="Draw it again to confirm.";return}if(s!==first){first=null;m.textContent="Patterns didn’t match. Draw a new one.";return}saveLock({t:"pattern",h:await sha("pt:"+s)});$("#sheet").classList.remove("open");showSettings()})}
+function mountPattern(host,onDone){host.innerHTML='<div class="pat"><svg class="pl" viewBox="0 0 240 240"><polyline fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" points=""/></svg>'+Array.from({length:9},(_,i)=>`<i class="pd" style="left:${(i%3)*80+26}px;top:${Math.floor(i/3)*80+26}px"></i>`).join("")+'</div>';
+ const g=host.querySelector(".pat"),pl=g.querySelector("polyline"),ds=[...g.querySelectorAll(".pd")];let seq=[],on=false;
+ const C=i=>[(i%3)*80+40,Math.floor(i/3)*80+40],pts=ex=>seq.map(i=>C(i).join(",")).concat(ex?[ex]:[]).join(" "),pos=e=>{const r=g.getBoundingClientRect();return[(e.clientX-r.left)*240/r.width,(e.clientY-r.top)*240/r.height]};
+ const hit=(x,y)=>{for(let i=0;i<9;i++){const [cx,cy]=C(i);if(Math.hypot(x-cx,y-cy)<30&&!seq.includes(i)){seq.push(i);ds[i].classList.add("on");return}}};
+ g.addEventListener("pointerdown",e=>{on=true;seq=[];ds.forEach(d=>d.classList.remove("on"));try{g.setPointerCapture(e.pointerId)}catch(x){}const [x,y]=pos(e);hit(x,y);pl.setAttribute("points",pts(x+","+y))});
+ g.addEventListener("pointermove",e=>{if(!on)return;const [x,y]=pos(e);hit(x,y);pl.setAttribute("points",pts(x+","+y))});
+ const end=()=>{if(!on)return;on=false;pl.setAttribute("points",pts());const sq=seq.join("");setTimeout(()=>{ds.forEach(d=>d.classList.remove("on"));pl.setAttribute("points","")},350);onDone(sq)};
+ g.addEventListener("pointerup",end);g.addEventListener("pointercancel",end)}
+function lockNow(){buf="";$("#lock").classList.add("on");drawLock()}
+const unlock=()=>$("#lock").classList.remove("on");
+function dots(){const L=getLock(),n=(L&&L.n)||4,d=$("#dots");if(d)d.innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<buf.length?"f":""}"></i>`).join("")}
+function drawLock(){const L=getLock(),h=$("#lk"),m=$("#lkmsg");if(!L)return;buf="";
+ if(L.t==="pin"){m.textContent="Enter your PIN";h.innerHTML='<div id="dots"></div><div id="pad"></div>';$("#pad").innerHTML=["1","2","3","4","5","6","7","8","9","","0","del"].map(d=>d===""?"<span></span>":`<button data-d="${d}">${d==="del"?"⌫":d}</button>`).join("");dots()}
+ else if(L.t==="pass"){m.textContent="Enter your password";h.innerHTML='<input id="lpw" type="password" autocomplete="off" placeholder="Password" class="lpw"><br><button class="btn" id="lgo" style="margin-top:14px">Unlock</button>'}
+ else{m.textContent="Draw your pattern";mountPattern(h,async s=>{if(await sha("pt:"+s)===L.h)unlock();else{h.classList.add("shake");setTimeout(()=>h.classList.remove("shake"),400)}})}}
+async function pinKey(d){const L=getLock();if(!L||L.t!=="pin")return;if(d==="del")buf=buf.slice(0,-1);else buf+=d;dots();if(buf.length===L.n){if(await sha(buf)===L.h)unlock();else{$("#dots").classList.add("shake");setTimeout(()=>$("#dots").classList.remove("shake"),400)}buf="";setTimeout(dots,150)}}
+async function checkPass(){const L=getLock(),i=$("#lpw");if(!L||!i)return;if(await sha("pw:"+i.value.trim())===L.h)unlock();else{i.value="";i.classList.add("shake");setTimeout(()=>i.classList.remove("shake"),400)}}
+async function forgot(){if(!await ask("Forgot your lock? The only way in is to erase everything saved in Ruhi on this phone. Your backup files and WhatsApp exports are not affected.","Erase everything"))return;try{[LKJ,LK,LK+"n","ruhi:state","ruhi:lb"].forEach(k=>localStorage.removeItem(k))}catch(e){}await new Promise(r=>{const q=indexedDB.deleteDatabase("chatvault");q.onsuccess=q.onerror=q.onblocked=()=>r()});location.reload()}
 async function showSettings(){chrome("settings");$("#hd").innerHTML='<button id="back">←</button><h1>Settings</h1>';const pin=getPin();
  let sz={},tot=0,est={usage:0,quota:0};try{const ks=await op("media","readonly",s=>s.getAllKeys()),bs=await op("media","readonly",s=>s.getAll());ks.forEach((k,i)=>{const id=String(k).split("/")[0],n=bs[i]?bs[i].size:0;sz[id]=(sz[id]||0)+n;tot+=n});est=await navigator.storage.estimate()}catch(e){}
  const g=n=>n>=1e9?(n/1e9).toFixed(2)+" GB":(n/1e6).toFixed(1)+" MB";let per=false;try{per=await navigator.storage.persisted()}catch(e){}const inst=isInstalled(),lb=localGet("ruhi:lb"),sk=getSkin();
- $("#main").innerHTML=`<div class="sec"><h4>APP LOCK</h4>${pin?"<p>PIN lock is ON. Ruhi locks whenever you leave the page.</p>":"<p>Protect Ruhi with a PIN.</p>"}<div class="r2" style="justify-content:flex-start"><button class="btn sm" id="setpin">${pin?"Change PIN":"Set PIN"}</button>${pin?'<button class="btn sm g" id="rmpin">Remove PIN</button>':""}</div></div>
+ $("#main").innerHTML=`<div class="sec"><h4>APP LOCK</h4>${getLock()?`<p>🔒 ${{pin:"PIN",pass:"Password",pattern:"Pattern"}[getLock().t]} lock is ON. Ruhi locks after you leave it for a minute.</p>`:"<p>Protect Ruhi with a PIN, a password or a pattern.</p>"}<div class="r2" style="justify-content:flex-start"><button class="btn sm" id="setlock">${getLock()?"Change lock":"Set lock"}</button>${getLock()?'<button class="btn sm g" id="rmpin">Remove lock</button>':""}</div></div>
  <div class="sec"><h4>APPEARANCE</h4><div class="skins">${SKINS.map(([k,n,c])=>`<button class="skin ${sk===k?"on":""}" data-sk="${k}"><i style="background:${c}"></i>${n}</button>`).join("")}</div><p style="color:var(--mut);font-size:13px;margin:8px 0 0">Soft looks for her: Rose Blush and Lavender Dream. Midnight Rose is a dark pink night look.</p><h4 style="margin:14px 0 6px">CHAT WALLPAPER</h4><div class="skins">${WALLS.map(([k,n])=>`<button class="skin ${getWall()===k?"on":""}" data-wl="${k}">${n}</button>`).join("")}</div></div>
  <div class="sec"><h4>SAFETY</h4>${per?"<p>✅ <b>Protected storage is ON.</b> Your browser won’t delete Ruhi’s chats on its own to free space.</p>":'<p>⚠️ Protected storage is OFF.</p><button class="btn sm" id="prot">Turn on protection</button>'}<p style="color:var(--mut);font-size:13px">Everything stays only on this device. Clearing browser data, “Clear site data”, uninstalling the browser or a private tab will erase it. Keep a backup file.</p></div>
  <div class="sec"><h4>STORAGE</h4><p>Ruhi uses <b>${g(tot)}</b> (media) · whole browser site: ${g(est.usage||0)} of about ${g(est.quota||0)} allowed.</p>${chats.filter(c=>c.kind!=="combo").map(c=>`<div style="margin:8px 0">${esc(c.title)} <span style="float:right;color:var(--mut)">${g(sz[c.id]||0)}</span><div class="bar"><i style="width:${tot?Math.round((sz[c.id]||0)/tot*100):0}%"></i></div></div>`).join("")||"<p style='color:var(--mut)'>No chats yet.</p>"}<p style="color:var(--mut);font-size:13px">Videos use the most space. Delete a chat with big videos, or free space on your phone itself (old apps, downloads, videos in the gallery).</p></div>
@@ -326,11 +355,17 @@ const BF=(i,a,b)=>`<svg viewBox="-30 -26 60 52" width="64" height="54"><defs><li
  place();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
  w.insertAdjacentHTML("beforeend",Array.from({length:16},(_,i)=>`<i class="sp" style="left:${(i*29)%100}%;top:${-15+(i*41)%130}%;animation-delay:${.5+(i%8)*.35}s">✦</i>`).join(""));
  setTimeout(()=>{const b=$("#bfs");if(b)b.classList.add("land")},3900)})();
-let vt=0,vtt=0;
+let vt=0,vtt=0,rxKeys=null;
+const itemsOf=ks=>ks.map(k=>{const [c,i]=k.split(":");return [chats.find(x=>x.id===c),+i]}).filter(x=>x[0]);
+function memoryEditor(k){const [c,i]=k.split(":"),ch=chats.find(x=>x.id===c);if(!ch)return;const m=ch.msgs[+i];const v0=["Memory","Key point","Key moment"].includes(m.k)?"":(m.k||"");const q=(m.b||"").replace(/<attached:[^>]*>/,"📎").slice(0,140);
+ $("#panel").innerHTML=`<h3 style="margin:0 0 8px">💗 Memories</h3><div style="background:var(--bg);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--mut);margin-bottom:8px;max-height:70px;overflow:hidden">${esc(q)}</div><textarea id="mem" rows="5" placeholder="Type anything you want to remember…" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;resize:none"></textarea><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">${m.k?'<button class="opt" style="display:inline-block;width:auto;color:#d93025" id="mrm">Remove</button>':""}<button class="opt" style="display:inline-block;width:auto" id="mc">Cancel</button><button class="opt" style="display:inline-block;width:auto;background:var(--ac);color:#fff;border:0" id="ms">Save</button></div>`;
+ const ta=$("#mem");ta.value=v0;$("#sheet").classList.add("open");setTimeout(()=>ta.focus(),60);$("#mc").onclick=()=>$("#sheet").classList.remove("open");
+ const done=async v=>{$("#sheet").classList.remove("open");if(v===null)delete m.k;else m.k=v;await save(ch);renderMsgs(false);toast(v===null?"Memory removed":"💗 Memory saved")};
+ $("#ms").onclick=()=>done(ta.value.trim()||"Memory");const rm=$("#mrm");if(rm)rm.onclick=()=>done(null)}
 function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),1800)}
 async function swipeKey(k){const [c,i]=k.split(":"),ch=chats.find(x=>x.id===c);if(!ch)return;const m=ch.msgs[+i];if(m.k){delete m.k;toast("Key point removed")}else{m.k="Key point";toast("⭐ Saved as key point")}await save(ch);renderMsgs(false)}
-function reactPick(){const E=["👍","❤️","😂","😮","😢","🙏","🔥","🎉"];$("#panel").innerHTML='<h3 style="margin:0 0 10px">React</h3><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">'+E.map(e=>`<button class="opt" style="text-align:center;font-size:26px;padding:8px;margin:0" data-rx="${e}">${e}</button>`).join("")+'</div><button class="opt" style="margin-top:10px;text-align:center" data-rx="">Remove reaction</button>';$("#sheet").classList.add("open")}
-async function applyRx(e){$("#sheet").classList.remove("open");const it=selItems(),s=new Set(),all=it.every(([c,i])=>c.msgs[i].re===e);for(const [c,i] of it){if(e===""||all)delete c.msgs[i].re;else c.msgs[i].re=e;s.add(c)}for(const c of s)await save(c);sel.clear();renderMsgs(false)}
+function reactPick(k){rxKeys=k?[k]:null;const E=["👍","❤️","😂","😮","😢","🙏","🔥","🎉"];$("#panel").innerHTML='<h3 style="margin:0 0 10px">React</h3><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">'+E.map(e=>`<button class="opt" style="text-align:center;font-size:26px;padding:8px;margin:0" data-rx="${e}">${e}</button>`).join("")+'</div><button class="opt" style="margin-top:10px;text-align:center" data-rx="">Remove reaction</button>';$("#sheet").classList.add("open")}
+async function applyRx(e){$("#sheet").classList.remove("open");const it=itemsOf(rxKeys||[...sel]);rxKeys=null;const s=new Set(),all=it.every(([c,i])=>c.msgs[i].re===e);for(const [c,i] of it){if(e===""||all)delete c.msgs[i].re;else c.msgs[i].re=e;s.add(c)}for(const c of s)await save(c);sel.clear();renderMsgs(false)}
 /* birthday reminder: hold (blur) 7:20-7:30pm, surprise at 7:30pm, on 27 Mar 2027, once */
 const SUR={t0:new Date(2027,2,27,19,20,0).getTime(),t1:new Date(2027,2,27,19,30,0).getTime(),end:new Date(2027,2,28,0,0,0).getTime()};
 const SURMSG=["Wishing you a day as beautiful as you are.","May this year bring you everything your heart hopes for.","You make every day brighter, just by being you."];
@@ -361,9 +396,11 @@ setInterval(tick,1000);document.addEventListener("visibilitychange",()=>{if(!doc
 const main=$("#main");
 document.addEventListener("pointerdown",()=>{lp=false},true);
 let sx=0,sy=0,sr=null,sdx=0,sw=false;
-main.addEventListener("pointerdown",e=>{const r=e.target.closest(".row[data-k]");if(!r)return;sx=e.clientX;sy=e.clientY;sr=r;sdx=0;sw=false;clearTimeout(lt);lt=setTimeout(()=>{if(!sw){lp=true;toggleSel(r.dataset.k)}},500)});
-main.addEventListener("pointermove",e=>{if(!sr)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)>10||Math.abs(dy)>10)clearTimeout(lt);if(!sw&&dx>14&&Math.abs(dy)<dx/1.5)sw=true;if(sw){sdx=Math.max(0,Math.min(dx,90));const b=sr.querySelector(".b");if(b){b.style.transition="none";b.style.transform="translateX("+sdx+"px)"}}});
-const endSw=()=>{clearTimeout(lt);if(sr&&sw){const b=sr.querySelector(".b");if(b){b.style.transition="transform .2s";b.style.transform=""}lp=true;if(sdx>60)swipeKey(sr.dataset.k)}sr=null;sw=false};
+main.addEventListener("pointerdown",e=>{if(e.target.closest(".swa"))return;const r=e.target.closest(".row[data-k]");if(!r)return;sx=e.clientX;sy=e.clientY;sr=r;sdx=0;sw=false;clearTimeout(lt);lt=setTimeout(()=>{if(!sw){lp=true;toggleSel(r.dataset.k)}},500)});
+main.addEventListener("pointermove",e=>{if(!sr)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)>10||Math.abs(dy)>10)clearTimeout(lt);if(!sw&&dx>14&&Math.abs(dy)<dx/1.5)sw=true;if(sw){sdx=Math.max(0,Math.min(dx,150));const b=sr.querySelector(".b");if(b){b.style.transition="none";b.style.transform="translateX("+sdx+"px)"}}});
+let swOpen=null;
+function closeSw(){if(!swOpen)return;const b=swOpen.querySelector(".b"),a=swOpen.querySelector(".swa");if(b){b.style.transition="transform .2s";b.style.transform=""}if(a)a.remove();swOpen=null}
+const endSw=()=>{clearTimeout(lt);if(sr&&sw){lp=true;const b=sr.querySelector(".b");if(sdx>55){closeSw();if(b){b.style.transition="transform .2s";b.style.transform="translateX(150px)"}sr.insertAdjacentHTML("afterbegin",`<div class="swa"><button data-sa="key" data-k="${sr.dataset.k}"><span>💗</span>Memories</button><button data-sa="rx" data-k="${sr.dataset.k}"><span>😊</span>React</button></div>`);swOpen=sr}else if(b){b.style.transition="transform .2s";b.style.transform=""}}sr=null;sw=false};
 ["pointerup","pointercancel"].forEach(ev=>main.addEventListener(ev,endSw));
 main.addEventListener("contextmenu",e=>{if(e.target.closest(".row[data-k]"))e.preventDefault()});
 document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
@@ -376,6 +413,8 @@ document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
  const kd=c("[data-d]");if(kd){pinKey(kd.dataset.d);return}
  const a=c("a[data-u]");if(a){e.preventDefault();if(!sel.size&&!lp)openLink(a.dataset.u);lp=false;return}
  const rw=c(".row[data-k]");if(rw){if(lp){lp=false;return}if(sel.size){toggleSel(rw.dataset.k);return}}
+ const sa=c("[data-sa]");if(sa){const k=sa.dataset.k;closeSw();if(sa.dataset.sa==="key")memoryEditor(k);else reactPick(k);return}
+ if(swOpen){closeSw();return}
  const mv=c(".mv");if(mv){openV(mv.dataset.v);return}
  const ff=c("[data-f]");if(ff){openDoc(ff.dataset.f);return}
  const lu=c("[data-lu]");if(lu){openLink(lu.dataset.lu);return}
@@ -404,8 +443,10 @@ document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
  if(c("#rph")){delete cur.photo;await save(cur);showProfile();return}
  if(c("#who2")){askMe(cur);return}
  if(c("#delc")){delChat(cur.id);return}
- if(c("#setpin")){setPin();return}
- if(c("#rmpin")){if(await ask("Remove the PIN lock?","Remove")){try{localStorage.removeItem(LK)}catch(x){}showSettings()}return}
+ if(c("#setlock")){setLock();return}
+ if(c("#lgo")){checkPass();return}
+ if(c("#lkf")){forgot();return}
+ if(c("#rmpin")){if(await ask("Remove the app lock?","Remove")){clearLock();showSettings()}return}
  if(c("#exp")){exportAll();return}
  const sb=c("[data-sk]");if(sb){setSkin(sb.dataset.sk);return}
  const wl=c("[data-wl]");if(wl){setWall(wl.dataset.wl);return}
@@ -424,7 +465,7 @@ $("#pfile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(f&
 $("#emo").innerHTML="😀 😁 😂 🤣 😊 😍 😘 😎 🤔 😢 😭 😡 😴 🤗 😅 😇 🥰 😜 🙈 🤷 👍 👎 🙏 👏 🙌 💪 🤝 👋 ✌️ 🔥 🎉 ❤️ 💔 💯 ✅ ❌ ⭐ 🌹 🎂 🎁 📷 📞 🏠 🚗 ✈️ 🍕 🍔 ☕ 🍺 ⚽ 🎵 😉 😋 😏 😬 🙄 😱 🤩 🥳 😤 🤯 😷 💤 👀 🙂 😆 😳 🥺 😌 🤞 👌 💙 💚 💛 🧡 💜".split(" ").map(x=>`<button data-e="${x}">${x}</button>`).join("");
 $("#viewer").addEventListener("touchstart",e=>{tx0=e.touches[0].clientX},{passive:true});
 $("#viewer").addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-tx0;if(Math.abs(d)>70)step(d<0?1:-1)},{passive:true});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeV()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeV();if(e.key==="Enter"&&e.target&&e.target.id==="lpw")checkPass()});
 let hideAt=0,sst=0;
 document.addEventListener("visibilitychange",()=>{if(document.hidden){hideAt=Date.now();saveState()}else if(getPin()&&hideAt&&Date.now()-hideAt>60000)lockNow()});
 window.addEventListener("pagehide",saveState);window.addEventListener("scroll",()=>{clearTimeout(sst);sst=setTimeout(saveState,400)},{passive:true});
