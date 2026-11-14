@@ -86,6 +86,8 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 .pat{position:relative;width:240px;height:240px;margin:0 auto;touch-action:none;color:#fff;user-select:none;-webkit-user-select:none}
 .pd{position:absolute;width:28px;height:28px;border-radius:50%;border:2px solid currentColor;opacity:.75}.pd.on{background:currentColor;opacity:1}
 .pl{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#impp{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.55);display:grid;place-items:center}.ib{background:var(--card);border-radius:14px;padding:18px;width:82%;max-width:330px;text-align:center}.ib small{color:var(--mut)}.ibar{height:8px;background:var(--bd);border-radius:4px;margin:12px 0 8px;overflow:hidden}.ibar i{display:block;height:100%;background:var(--ac);width:0;transition:width .15s}
+.spin2{width:30px;height:30px;border:3px solid var(--bd);border-top-color:var(--ac);border-radius:50%;margin:0 auto 12px;animation:spin1 .8s linear infinite}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
@@ -170,7 +172,7 @@ let chats=[],cur=null,view=[],limit=400,urls={},sel=new Set(),lp=false,lt=0,mode
 const LK="ruhi:pin",DF={};
 const ST=(()=>{try{return JSON.parse(localStorage.getItem("ruhi:state"))}catch(e){return null}})(),gap=ST?Date.now()-ST.t:Infinity,resume=!!ST&&gap<1800000;
 function saveState(){try{localStorage.setItem("ruhi:state",JSON.stringify({t:Date.now(),mode,id:cur&&cur.id,y:window.scrollY,tab:ptab}))}catch(e){}}
-const VERSION=7,SKINS=[["","WhatsApp Green","#25d366"],["rose","Rose Blush","#ec4b8b"],["lavender","Lavender Dream","#9a73f0"],["peach","Peach Sunset","#ff8a5c"],["night","Midnight Rose","#2a1b2e"]];
+const VERSION="7.1",SKINS=[["","WhatsApp Green","#25d366"],["rose","Rose Blush","#ec4b8b"],["lavender","Lavender Dream","#9a73f0"],["peach","Peach Sunset","#ff8a5c"],["night","Midnight Rose","#2a1b2e"]];
 let deferredPrompt=null;
 const localGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const getSkin=()=>localGet("ruhi:skin")||"";
@@ -180,10 +182,25 @@ const isInstalled=()=>matchMedia("(display-mode: standalone)").matches||matchMed
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e});
 async function checkUpdate(){const m=$("#upm"),say=t=>{if(m)m.textContent=t};try{const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(!r){say("Updates work in the installed app, with internet.");return}say("Checking…");await r.update();if(r.installing||r.waiting)say("Update found. Restarting…");else say("✅ You have the latest version ("+VERSION+").")}catch(e){say("Couldn’t check. Are you online?")}}
 /* storage */
-let dbp=null;const DB=()=>dbp||(dbp=new Promise((res,rej)=>{const r=indexedDB.open("chatvault",1);r.onupgradeneeded=()=>{r.result.createObjectStore("chats",{keyPath:"id"});r.result.createObjectStore("media")};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}).then(d=>{d.onversionchange=()=>{d.close();dbp=null};d.onclose=()=>{dbp=null};return d},e=>{dbp=null;throw e}));
+let dbp=null;const DB=()=>dbp||(dbp=new Promise((res,rej)=>{const r=indexedDB.open("chatvault",2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains("chats"))d.createObjectStore("chats",{keyPath:"id"});if(!d.objectStoreNames.contains("media"))d.createObjectStore("media");if(!d.objectStoreNames.contains("chatmeta"))d.createObjectStore("chatmeta",{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}).then(d=>{d.onversionchange=()=>{d.close();dbp=null};d.onclose=()=>{dbp=null};return d},e=>{dbp=null;throw e}));
 async function op(store,mode,fn){const db=await DB();return new Promise((res,rej)=>{const t=db.transaction(store,mode);const rq=fn(t.objectStore(store));t.oncomplete=()=>res(rq&&rq.result);t.onerror=()=>rej(t.error)})}
-async function load(){try{chats=(await op("chats","readonly",s=>s.getAll())).sort((a,b)=>b.added-a.added)}catch(e){chats=[]}}
-const save=c=>op("chats","readwrite",s=>s.put(c));
+function metaOf(c){const m={};for(const k in c){if(k[0]!=="_"&&k!=="msgs")m[k]=c[k]}if(Array.isArray(c.msgs)){m.n=c.msgs.length;const l=c.msgs[c.msgs.length-1];m.last=l?l.d:""}return m}
+async function putMeta(c){const m=metaOf(c);await op("chatmeta","readwrite",s=>s.put(m));return m}
+async function buildMeta(){const out=[],ids=await op("chats","readonly",s=>s.getAllKeys());for(const id of ids){const full=await op("chats","readonly",s=>s.get(id));if(full)out.push(await putMeta(full))}return out}
+async function load(){try{let ms=await op("chatmeta","readonly",s=>s.getAll());if(!ms.length)ms=await buildMeta();const old=new Map(chats.map(c=>[c.id,c]));
+ chats=ms.sort((a,b)=>b.added-a.added).map(m=>{const o=old.get(m.id);if(o&&Array.isArray(o.msgs)){for(const k in o){if(k!=="msgs"&&k[0]!=="_"&&!(k in m))delete o[k]}Object.assign(o,m);return o}return m})}catch(e){chats=[]}}
+async function saveNow(c){if(Array.isArray(c.msgs)){c.n=c.msgs.length;const l=c.msgs[c.msgs.length-1];c.last=l?l.d:"";const rec={};for(const k in c){if(k[0]!=="_")rec[k]=c[k]}await op("chats","readwrite",s=>s.put(rec));await putMeta(c);return}
+ const full=await op("chats","readonly",s=>s.get(c.id));if(!full)return;const m=metaOf(c);for(const k in m){if(k!=="n"&&k!=="last")full[k]=m[k]}await op("chats","readwrite",s=>s.put(full));await op("chatmeta","readwrite",s=>s.put(m))}
+const dirty=new Map();let sl=0;
+function save(c){if(!Array.isArray(c.msgs))return saveNow(c);c.n=c.msgs.length;const l=c.msgs[c.msgs.length-1];c.last=l?l.d:"";dirty.set(c.id,c);clearTimeout(sl);sl=setTimeout(flush,500);return Promise.resolve()}
+async function flush(){clearTimeout(sl);const cs=[...dirty.values()];dirty.clear();for(const c of cs){try{await saveNow(c)}catch(e){}}}
+const isLoaded=c=>Array.isArray(c.msgs)&&(c.kind!=="combo"||c.src.every(id=>{const s=chats.find(x=>x.id===id);return !s||Array.isArray(s.msgs)}));
+async function loadFull(c){if(Array.isArray(c.msgs))return;const full=await op("chats","readonly",s=>s.get(c.id));c.msgs=(full&&full.msgs)||[]}
+async function loadFor(c){await loadFull(c);if(c.kind==="combo")for(const id of c.src){const s=chats.find(x=>x.id===id);if(s)await loadFull(s)}}
+async function putMany(store,items){const db=await DB();return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite"),o=t.objectStore(store);items.forEach(([k,v])=>o.put(v,k));t.oncomplete=()=>res();t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
+const sleep0=()=>new Promise(r=>setTimeout(r,0));
+function prog(t,pct){let e=$("#impp");if(!e){document.body.insertAdjacentHTML("beforeend",'<div id="impp"><div class="ib"><div id="impt"></div><div class="ibar"><i id="impb"></i></div><small>Please keep Ruhi open</small></div></div>');e=$("#impp")}$("#impt").textContent=t;$("#impb").style.width=Math.max(0,Math.min(100,pct||0))+"%"}
+const progEnd=()=>{const e=$("#impp");if(e)e.remove()};
 const MIME={jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",gif:"image/gif",webp:"image/webp",mp4:"video/mp4",mov:"video/quicktime","3gp":"video/3gpp",webm:"video/webm",opus:"audio/ogg; codecs=opus",ogg:"audio/ogg",mp3:"audio/mpeg",m4a:"audio/mp4",aac:"audio/aac",wav:"audio/wav"};
 async function mUrl(k){if(!urls[k]){const b=await op("media","readonly",s=>s.get(k));if(b){const x=(k.split(".").pop()||"").toLowerCase();urls[k]=URL.createObjectURL(MIME[x]?new Blob([b],{type:MIME[x]}):b)}}return urls[k]}
 /* dialogs */
@@ -195,30 +212,34 @@ function openLink(u){dlg(u,[["Close"],["Copy",()=>{try{navigator.clipboard.write
 const RE=/^\[?(\d{1,4}[\/.\-]\d{1,2}[\/.\-]\d{1,4}),?\s+(\d{1,2}[:.]\d{2}(?::\d{2})?(?:\s?[AaPp]\.?[Mm]\.?)?)\]?\s*(?:[-–]\s*)?([\s\S]*)$/;
 function parse(text){const out=[];for(const raw of text.split(/\r?\n/)){const line=raw.replace(/[\u200e\u200f\u202a-\u202e]/g,"");const m=line.match(RE);
  if(m){const rest=m[3];let s="",b=rest;const i=rest.indexOf(": ");if(i>0&&i<60){s=rest.slice(0,i);b=rest.slice(i+2)}out.push({d:m[1],t:m[2].replace(/\s+/g," "),s,b})}else if(out.length)out[out.length-1].b+="\n"+line}return out}
-function fileOf(b){let m=b.match(/<attached:\s*(.+?)>/);if(m)return m[1].trim();m=b.match(/^(.+?\.\w{2,5})\s\(file attached\)/);return m?m[1].trim():""}
+function fileOf(b){if(b.indexOf("attached")<0)return"";let m=b.match(/<attached:\s*(.+?)>/);if(m)return m[1].trim();m=b.match(/^(.+?\.\w{2,5})\s\(file attached\)/);return m?m[1].trim():""}
 function dayFirst(c){if(DF[c.id]!==undefined)return DF[c.id];let r=true;for(const m of c.msgs){const p=m.d.split(/[\/.\-]/).map(Number);if(p[0]>12){r=true;break}if(p[1]>12){r=false;break}}return DF[c.id]=r}
 function ts(c,m){if(m.ts)return m.ts;const p=m.d.split(/[\/.\-]/).map(Number),df=dayFirst(c);const t=m.t.match(/(\d{1,2})[:.](\d{2})(?::(\d{2}))?\s?([AaPp])?/)||[];let h=+t[1]||0;if(/p/i.test(t[4]||"")&&h<12)h+=12;if(/a/i.test(t[4]||"")&&h===12)h=0;const y=p[2]<100?2000+p[2]:p[2];return new Date(y,(df?p[1]:p[0])-1,df?p[0]:p[1],h,+t[2]||0,+t[3]||0).getTime()||0}
-function buildView(){const ids=cur.kind==="combo"?[...cur.src,cur.id]:[cur.id],v=[];meSet=new Set();ids.forEach(id=>{const c=chats.find(x=>x.id===id);if(!c)return;if(c.me)meSet.add(c.me);c.msgs.forEach((m,i)=>v.push({m,c:id,i,t:ids.length>1?ts(c,m):0}))});if(ids.length>1)v.sort((a,b)=>a.t-b.t||a.i-b.i);return v}
+function buildView(win){const combo=cur.kind==="combo",ids=combo?[...cur.src,cur.id]:[cur.id],v=[];meSet=new Set();ids.forEach(id=>{const c=chats.find(x=>x.id===id);if(!c)return;if(c.me)meSet.add(c.me);const ms=c.msgs||[],from=(!combo&&win)?Math.max(0,ms.length-win):0;for(let i=from;i<ms.length;i++)v.push({m:ms[i],c:id,i,t:ids.length>1?ts(c,ms[i]):0})});if(ids.length>1)v.sort((a,b)=>a.t-b.t||a.i-b.i);return v}
 /* import / backup */
+async function parseAsync(text){const lines=text.split(/\r?\n/),out=[];for(let a=0;a<lines.length;a+=8000){const end=Math.min(a+8000,lines.length);for(let i=a;i<end;i++){const line=lines[i].replace(/[\u200e\u200f\u202a-\u202e]/g,""),m=line.match(RE);if(m){const rest=m[3];let s="",b=rest;const j=rest.indexOf(": ");if(j>0&&j<60){s=rest.slice(0,j);b=rest.slice(j+2)}out.push({d:m[1],t:m[2].replace(/\s+/g," "),s,b})}else if(out.length)out[out.length-1].b+="\n"+line}prog("Reading messages… "+Math.round(end/lines.length*100)+"%",12+8*end/lines.length);await sleep0()}return out}
 async function importFiles(files){
- let text="",name="",media={};
- for(const f of files){const n=f.name;
-  if(/\.zip$/i.test(n)){const z=await JSZip.loadAsync(f);if(z.file("chats.json")){await restore(z);return}name=name||n;
-   for(const k of Object.keys(z.files)){const e=z.files[k];if(e.dir)continue;const base=k.split("/").pop();
-    if(/\.txt$/i.test(base)&&!text){text=await e.async("string");name=base}else if(!/\.txt$/i.test(base))media[base]=await e.async("blob")}}
-  else if(/\.txt$/i.test(n)){text=await f.text();name=n}else media[n]=f}
- if(!text){ask("Please choose the exported chat .txt file or the .zip.");return}
- const msgs=parse(text);if(!msgs.length){ask("Couldn’t read messages from that file.");return}
- const senders=[...new Set(msgs.map(m=>m.s).filter(Boolean))],id=Date.now().toString(36);
- const title=name.replace(/\.(txt|zip)$/i,"").replace(/^WhatsApp Chat( with| -)?\s*/i,"")||"Chat";
- const chat={id,title,msgs,senders,me:senders.length==2?"":senders[0]||"",added:Date.now()};
- await save(chat);for(const k of Object.keys(media))await op("media","readwrite",s=>s.put(media[k],id+"/"+k));
- await load();askMe(chat)}
-async function restore(z){const cs=JSON.parse(await z.file("chats.json").async("string"));for(const c of cs)await save(c);
+ prog("Reading file… large files can take a minute",2);await sleep0();
+ try{let text="",name="";const entries=[];
+  for(const f of files){const n=f.name;
+   if(/\.zip$/i.test(n)){const z=await JSZip.loadAsync(f);if(z.file("chats.json")){progEnd();await restore(z);return}name=name||n;prog("Reading messages…",8);await sleep0();
+    for(const k of Object.keys(z.files)){const e=z.files[k];if(e.dir)continue;const base=k.split("/").pop();
+     if(/\.txt$/i.test(base)&&!text){text=await e.async("string");name=base}else if(!/\.txt$/i.test(base))entries.push({n:base,get:()=>e.async("blob")})}}
+   else if(/\.txt$/i.test(n)){text=await f.text();name=n}else entries.push({n,get:async()=>f})}
+  if(!text){progEnd();ask("Please choose the exported chat .txt file or the .zip.");return}
+  const msgs=await parseAsync(text);if(!msgs.length){progEnd();ask("Couldn’t read messages from that file.");return}
+  const senders=[...new Set(msgs.map(m=>m.s).filter(Boolean))],id=Date.now().toString(36);
+  const title=name.replace(/\.(txt|zip)$/i,"").replace(/^WhatsApp Chat( with| -)?\s*/i,"")||"Chat";
+  const chat={id,title,msgs,senders,me:senders.length==2?"":senders[0]||"",added:Date.now()};
+  prog("Saving "+msgs.length.toLocaleString()+" messages…",22);await sleep0();await saveNow(chat);
+  const B=12;for(let i=0;i<entries.length;i+=B){const batch=entries.slice(i,i+B),items=[];for(const e of batch)items.push([id+"/"+e.n,await e.get()]);await putMany("media",items);const dn=Math.min(i+B,entries.length);prog("Saving photos and files "+dn+" / "+entries.length,25+72*dn/entries.length);await sleep0()}
+  await load();progEnd();askMe(chat)}
+ catch(x){progEnd();throw x}}
+async function restore(z){const cs=JSON.parse(await z.file("chats.json").async("string"));for(const c of cs)await saveNow(c);chats.forEach(c=>{delete c.msgs});
  for(const k of Object.keys(z.files)){const e=z.files[k];if(e.dir||!k.startsWith("media/"))continue;const b=await e.async("blob");await op("media","readwrite",s=>s.put(b,k.slice(6)))}
  await load();showList()}
 async function saveFile(name,blob){try{if(window.claude&&claude.use){const d=await claude.use("downloads");if(d){await d.save({filename:name,data:blob});return}}}catch(e){}const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click()}
-async function exportAll(){try{const z=new JSZip();z.file("chats.json",JSON.stringify(await op("chats","readonly",s=>s.getAll())));const ks=await op("media","readonly",s=>s.getAllKeys());for(const k of ks)z.file("media/"+k,await op("media","readonly",s=>s.get(k)));await saveFile("ruhi-backup.zip",await z.generateAsync({type:"blob",compression:"STORE"}));try{localStorage.setItem("ruhi:lb",Date.now())}catch(e){}if(mode==="settings")showSettings()}catch(e){ask("Backup failed: "+e.message)}}
+async function exportAll(){try{await flush();const z=new JSZip();z.file("chats.json",JSON.stringify(await op("chats","readonly",s=>s.getAll())));const ks=await op("media","readonly",s=>s.getAllKeys());for(const k of ks)z.file("media/"+k,await op("media","readonly",s=>s.get(k)));await saveFile("ruhi-backup.zip",await z.generateAsync({type:"blob",compression:"STORE"}));try{localStorage.setItem("ruhi:lb",Date.now())}catch(e){}if(mode==="settings")showSettings()}catch(e){ask("Backup failed: "+e.message)}}
 /* helpers */
 function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function fmt(s){s=esc(s);s=s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" data-u="$1">$1</a>');return s.replace(/\*([^*\n]+)\*/g,"<b>$1</b>").replace(/(^|\s)_([^_\n]+)_/g,"$1<i>$2</i>").replace(/~([^~\n]+)~/g,"<s>$1</s>")}
@@ -235,13 +256,15 @@ const fico=f=>ext(f)==="pdf"?"📕":/^(xlsx?|csv)$/.test(ext(f))?"📊":/^(docx?
 /* screens */
 function chrome(m){mode=m;saveState();sel.clear();$("#bar").style.display="none";$("#emo").style.display="none";$("#dock").style.display=m==="chat"?"block":"none";$("#fab").style.display=m==="list"?"block":"none";window.scrollTo(0,0)}
 function showList(){cur=null;chrome("list");$("#hd").innerHTML='<h1><span class="rlogo">Ruhi</span> 🦋</h1><button id="rfsh" aria-label="Refresh">🔄</button><button id="gear" aria-label="Settings">⚙️</button>';
- $("#main").innerHTML=chats.length?chats.map(c=>{const l=c.msgs[c.msgs.length-1];return`<div class="it" data-o="${c.id}">${av(c,46)}<div class="t"><b>${esc(c.title)}</b><small>${c.kind==="combo"?"🔗 Combined · ":""}${c.kind==="combo"?c.src.reduce((n,id)=>n+((chats.find(x=>x.id===id)||{msgs:[]}).msgs.length),0)+c.msgs.length:c.msgs.length} messages${l?" · "+esc(l.d):""}</small></div><button class="x" data-x="${c.id}" aria-label="Delete">🗑</button></div>`}).join(""):'<div class="empty"><p style="font-size:44px;margin:0">💬</p><p>Tap + to import a WhatsApp chat export and read it here, looking just like WhatsApp.</p></div>';if(chats.length){const lb=+localGet("ruhi:lb")||0,days=lb?Math.floor((Date.now()-lb)/864e5):999;if(days>30)$("#main").insertAdjacentHTML("afterbegin",`<div class="sec" style="margin:0;display:flex;gap:10px;align-items:center"><div style="flex:1;font-size:13px">💾 ${lb?"Last backup was "+days+" days ago.":"No backup yet."} Keep your chats safe.</div><button class="btn sm" id="bk">Back up</button></div>`)}}
-function openChat(id){cur=chats.find(c=>c.id===id);if(!cur)return;limit=80;chrome("chat");$("#q").value="";renderMsgs(true)}
+ $("#main").innerHTML=chats.length?chats.map(c=>{const l=c.last?{d:c.last}:null;return`<div class="it" data-o="${c.id}">${av(c,46)}<div class="t"><b>${esc(c.title)}</b><small>${c.kind==="combo"?"🔗 Combined · ":""}${c.kind==="combo"?c.src.reduce((n,id)=>n+((chats.find(x=>x.id===id)||{n:0}).n||0),0)+(c.n||0):(c.n||0)} messages${l?" · "+esc(l.d):""}</small></div><button class="x" data-x="${c.id}" aria-label="Delete">🗑</button></div>`}).join(""):'<div class="empty"><p style="font-size:44px;margin:0">💬</p><p>Tap + to import a WhatsApp chat export and read it here, looking just like WhatsApp.</p></div>';if(chats.length){const lb=+localGet("ruhi:lb")||0,days=lb?Math.floor((Date.now()-lb)/864e5):999;if(days>30)$("#main").insertAdjacentHTML("afterbegin",`<div class="sec" style="margin:0;display:flex;gap:10px;align-items:center"><div style="flex:1;font-size:13px">💾 ${lb?"Last backup was "+days+" days ago.":"No backup yet."} Keep your chats safe.</div><button class="btn sm" id="bk">Back up</button></div>`)}}
+async function openChat(id){const c=chats.find(x=>x.id===id);if(!c)return;cur=c;limit=80;chrome("chat");$("#q").value="";
+ if(!isLoaded(c)){hdChat();$("#main").innerHTML='<div class="empty"><div class="spin2"></div><p>Opening chat…</p></div>';try{await loadFor(c)}catch(e){}if(cur!==c||mode!=="chat")return}
+ renderMsgs(true)}
 function hdChat(){if(sel.size){$("#hd").innerHTML=`<button id="sx">✕</button><h1>${sel.size} selected</h1><button id="srx" aria-label="React">😊</button><button id="skp" aria-label="Memory">💗</button><button id="sdel" aria-label="Delete">🗑</button>`;return}
  $("#hd").innerHTML=`<button id="back">←</button><div data-pf="1" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer">${av(cur,36)}<h1>${esc(cur.title)}${cur.kind==="combo"?'<small style="display:block;font-weight:400;font-size:12px;opacity:.85">'+cur.src.map(id=>esc((chats.find(x=>x.id===id)||{title:"?"}).title)).join(" + ")+'</small>':""}</h1></div><button id="srch" aria-label="Search">🔍</button>`}
-function renderMsgs(bottom){view=buildView();hdChat();const q=$("#q").value.toLowerCase();const vs=q?view.filter(x=>(x.m.b+x.m.s).toLowerCase().includes(q)):view;
- const start=Math.max(0,vs.length-limit),group=new Set(view.map(x=>x.m.s).filter(Boolean)).size>2;let h="",last="";
- if(start>0)h+='<div class="more"><button id="earlier">Load earlier messages</button></div>';
+function renderMsgs(bottom){const q=$("#q").value.toLowerCase();view=buildView(q?0:limit);hdChat();const vs=q?view.filter(x=>x.m.b.toLowerCase().includes(q)||(x.m.s||"").toLowerCase().includes(q)):view;
+ const start=Math.max(0,vs.length-limit),group=cur.senders.length>2;let h="",last="";
+ if(start>0||(!q&&cur.kind!=="combo"&&cur.msgs.length>limit))h+='<div class="more"><button id="earlier">Load earlier messages</button></div>';
  const combo=cur.kind==="combo",ct=id=>(chats.find(o=>o.id===id)||{title:""}).title;let lc="";for(const x of vs.slice(start)){const m=x.m,key=x.c+":"+x.i;
   if(m.d!==last){h+=`<div class="day"><span>${esc(m.d)}</span></div>`;last=m.d}
   if(!m.s){h+=`<div class="sys"><span>${esc(m.b)}</span></div>`;continue}
@@ -261,7 +284,7 @@ const PAY=/(₹|rs\.?|inr|\$|€|£|usd|eur)\s?\d[\d,]*(\.\d+)?|\d[\d,]*(\.\d+)?
 function showProfile(){chrome("profile");view=buildView();$("#hd").innerHTML='<button id="back">←</button><h1>Contact info</h1>';
  const files=view.map(x=>({x,f:fileOf(x.m.b)})).filter(o=>o.f).reverse();
  const media=files.filter(o=>isMedia(o.f)),docs=files.filter(o=>!isMedia(o.f)&&!isAud(o.f));
- const links=[];view.forEach(x=>(x.m.b.match(/https?:\/\/[^\s<]+/g)||[]).forEach(u=>links.push({u,x})));links.reverse();
+ const links=[];view.forEach(x=>{if(x.m.b.indexOf("http")<0)return;(x.m.b.match(/https?:\/\/[^\s<]+/g)||[]).forEach(u=>links.push({u,x}))});links.reverse();
  const kps=view.filter(x=>x.m.k).reverse().map(x=>({x})),pays=view.filter(x=>PK.test(x.m.b)&&PAY.test(x.m.b)).reverse().map(x=>({x}));
  const T=[["media","Media",media.length],["docs","Docs",docs.length],["links","Links",links.length],["kp","Memories",kps.length],["pay","Payments",pays.length]];
  const meta=x=>esc(x.m.s||"")+" · "+esc(x.m.d);let c="";
@@ -317,7 +340,7 @@ async function showSettings(){chrome("settings");$("#hd").innerHTML='<button id=
 /* chat actions */
 function askMe(c){$("#panel").innerHTML='<h3 style="margin:0 0 6px">Which one is you?</h3><p style="color:var(--mut);margin:0 0 8px;font-size:13px">Your messages show on the right, like in WhatsApp.</p>'+c.senders.map(s=>`<button class="opt" data-me="${esc(s)}">${esc(s)}</button>`).join("");$("#panel").dataset.id=c.id;$("#sheet").classList.add("open")}
 async function delChat(id){const c=chats.find(x=>x.id===id);if(!c)return;if(!await ask(c.kind==="combo"?'Delete the combined chat "'+c.title+'"? Your original chats stay.':'Delete "'+c.title+'" and all its photos and videos? This can’t be undone.','Delete'))return;
- try{await op("chats","readwrite",s=>s.delete(id));await op("media","readwrite",s=>s.delete(IDBKeyRange.bound(id+"/",id+"/\uffff")));Object.keys(urls).filter(k=>k.startsWith(id+"/")).forEach(k=>{URL.revokeObjectURL(urls[k]);delete urls[k]})}catch(e){}
+ dirty.delete(id);try{await op("chats","readwrite",s=>s.delete(id));await op("chatmeta","readwrite",s=>s.delete(id));await op("media","readwrite",s=>s.delete(IDBKeyRange.bound(id+"/",id+"/\uffff")));Object.keys(urls).filter(k=>k.startsWith(id+"/")).forEach(k=>{URL.revokeObjectURL(urls[k]);delete urls[k]})}catch(e){}
  chats.forEach(o=>{if(o.src&&o.src.includes(id)){o.src=o.src.filter(x=>x!==id);save(o)}});await load();showList()}
 async function cleanup(){try{const ids=new Set(chats.map(c=>c.id));const ks=await op("media","readonly",s=>s.getAllKeys());for(const k of ks)if(!ids.has(String(k).split("/")[0]))await op("media","readwrite",s=>s.delete(k))}catch(e){}}
 function loadImg(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
@@ -342,7 +365,7 @@ function startCombine(){const L=chats.filter(c=>c.kind!=="combo");if(L.length<2)
  $("#cn").onclick=async()=>{const ids=[...p.querySelectorAll("[data-cs]")].filter(x=>x.checked).map(x=>x.dataset.cs);if(ids.length<2){$("#cw").textContent="Select at least two chats.";return}
   $("#sheet").classList.remove("open");const name=await inp("Name the combined chat","");if(!name)return;
   const src=ids.map(id=>chats.find(x=>x.id===id));const combo={id:Date.now().toString(36),title:name,kind:"combo",src:ids,msgs:[],senders:[...new Set(src.flatMap(x=>x.senders))],me:src[0].me||"",added:Date.now()};
-  await save(combo);await load();showList()}}
+  await saveNow(combo);await load();showList()}}
 const WALLS=[["butterflies","Butterflies 🦋"],["hearts","Hearts 💗"],["sparkles","Sparkles ✨"],["plain","Plain"]];
 const getWall=()=>localGet("ruhi:wall")||"butterflies";
 function wallSvg(kind,col){const B=(x,y,r,s)=>`<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})"><path d="M0 -1C5 -13 17 -15 17 -6C17 1 8 3 0 0C10 3 15 9 11 14C7 18 2 12 0 4C-2 12 -7 18 -11 14C-15 9 -10 3 0 0C-8 3 -17 1 -17 -6C-17 -15 -5 -13 0 -1Z"/></g>`,H=(x,y,r,s)=>`<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})"><path d="M0 6C-14 -4 -8 -14 0 -6C8 -14 14 -4 0 6Z"/></g>`,S=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 -8L2 -2 8 0 2 2 0 8-2 2-8 0-2-2Z"/></g>`;
@@ -456,12 +479,12 @@ document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);
  const rxb=c("[data-rx]");if(rxb){applyRx(rxb.dataset.rx);return}
  if(c("#srx")){reactPick();return}
  if(c("#bk")){exportAll();return}
- if(c("#rfsh")){c("#rfsh").classList.add("spin");toast("Refreshing…");try{localStorage.setItem("ruhi:skip",Date.now())}catch(x){}setTimeout(()=>location.reload(),900);return}
+ if(c("#rfsh")){c("#rfsh").classList.add("spin");toast("Refreshing…");try{localStorage.setItem("ruhi:skip",Date.now())}catch(x){}flush();setTimeout(()=>location.reload(),900);return}
  if(c("#ver")){vt++;clearTimeout(vtt);vtt=setTimeout(()=>vt=0,1500);if(vt>=5){vt=0;previewMenu()}return}
  if(c("#inst")){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null}return}
  if(c("#prot")){try{await navigator.storage.persist()}catch(x){}showSettings();return}
  if(c("#upd")){checkUpdate();return}});
-$("#q").oninput=()=>renderMsgs(false);
+let qt=0;$("#q").oninput=()=>{clearTimeout(qt);qt=setTimeout(()=>renderMsgs(false),250)};
 $("#ti").onkeydown=e=>{if(e.key==="Enter")send()};
 $("#file").onchange=async e=>{const f=[...e.target.files];e.target.value="";if(f.length)try{await importFiles(f)}catch(x){ask("Import failed: "+x.message)}};
 $("#pfile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(f&&cur){cur.photo=await sq(await readURL(f));await save(cur);showProfile()}};
@@ -470,12 +493,12 @@ $("#viewer").addEventListener("touchstart",e=>{tx0=e.touches[0].clientX},{passiv
 $("#viewer").addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-tx0;if(Math.abs(d)>70)step(d<0?1:-1)},{passive:true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeV();if(e.key==="Enter"&&e.target&&e.target.id==="lpw")checkPass()});
 let hideAt=0,sst=0;
-document.addEventListener("visibilitychange",()=>{if(document.hidden){hideAt=Date.now();saveState()}else if(getPin()&&hideAt&&Date.now()-hideAt>60000)lockNow()});
-window.addEventListener("pagehide",saveState);window.addEventListener("scroll",()=>{clearTimeout(sst);sst=setTimeout(saveState,400)},{passive:true});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){hideAt=Date.now();saveState();flush()}else if(getPin()&&hideAt&&Date.now()-hideAt>60000)lockNow()});
+window.addEventListener("pagehide",()=>{saveState();flush()});window.addEventListener("scroll",()=>{clearTimeout(sst);sst=setTimeout(saveState,400)},{passive:true});
 if(getPin()&&(!resume||gap>60000))lockNow();
 load().then(()=>{let ok=false;
  if(resume&&ST.mode==="chat"&&chats.find(c=>c.id===ST.id)){openChat(ST.id);ok=true}
- else if(resume&&ST.mode==="profile"&&chats.find(c=>c.id===ST.id)){cur=chats.find(c=>c.id===ST.id);ptab=ST.tab||"media";showProfile();ok=true}
+ else if(resume&&ST.mode==="profile"&&chats.find(c=>c.id===ST.id)){ptab=ST.tab||"media";openChat(ST.id).then(()=>{if(cur&&cur.id===ST.id&&mode==="chat")showProfile()});ok=true}
  else if(resume&&ST.mode==="settings"){showSettings();ok=true}
  if(!ok)showList();
  if(ok&&ST.y)setTimeout(()=>window.scrollTo(0,ST.y),600);
